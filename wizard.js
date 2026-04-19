@@ -478,4 +478,41 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
     output.classList.remove("hidden");
     output.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  // -------------------------------------------------------------------------
+  // URL-parameter pre-fill: lets other pages (the supervision-site embed, a
+  // shared link) route a visitor straight to a pre-populated wizard. If every
+  // required field is already filled by the URL, auto-submit so the starter
+  // kit renders on arrival.
+  // -------------------------------------------------------------------------
+
+  function prefillFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const fields = ["pages", "compute", "language", "doctype", "analysis", "constraints"];
+    let anySet = false;
+
+    for (const name of fields) {
+      const v = params.get(name);
+      if (!v) continue;
+      const el = form.elements[name];
+      if (!el) continue;
+      // Only set the value if the URL param matches one of the <option>s.
+      const valid = Array.from(el.options).some(o => o.value === v);
+      if (!valid) continue;
+      el.value = v;
+      anySet = true;
+    }
+
+    if (!anySet) return;
+
+    const required = ["pages", "compute", "language", "doctype", "constraints"];
+    const allFilled = required.every(name => form.elements[name].value);
+    if (allFilled) {
+      requestAnimationFrame(() => {
+        if (typeof form.requestSubmit === "function") form.requestSubmit();
+        else form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+      });
+    }
+  }
+  prefillFromURL();
 })();

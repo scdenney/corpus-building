@@ -1,0 +1,127 @@
+<!-- corpus-building: mini-wizard embed
+     Copy-paste into a supervision-site page (e.g. Building a Corpus >
+     Using Computational Tools). Self-contained HTML + CSS — no JS.
+     The form action points at the full wizard and the two answers ride
+     along as URL parameters; the main wizard reads them on load and
+     pre-fills, so a visitor who arrives here with both answers gets
+     carried straight to a rendered starter kit.
+-->
+
+<aside class="cb-mini-wizard">
+  <span class="cb-mini-eyebrow">Quick route</span>
+  <h3>Should you use the full corpus-building wizard?</h3>
+  <p>Answer two questions. We'll launch the wizard with your corpus in mind.</p>
+  <form method="get" action="https://scdenney.github.io/corpus-building/">
+    <label>
+      <span>How many pages?</span>
+      <select name="pages" required>
+        <option value="">—</option>
+        <option value="lt100">Less than 100</option>
+        <option value="101_500">101–500</option>
+        <option value="501_1k">501–1,000</option>
+        <option value="1k_5k">1,001–5,000</option>
+        <option value="5k_10k">5,001–10,000</option>
+        <option value="gt10k">More than 10,000</option>
+      </select>
+    </label>
+    <label>
+      <span>What compute?</span>
+      <select name="compute" required>
+        <option value="">—</option>
+        <option value="alice">ALICE account</option>
+        <option value="lucdh">LUCDH workstation</option>
+        <option value="gpu_big">Local GPU, 16 GB or more</option>
+        <option value="gpu_small">Local GPU, less than 16 GB</option>
+        <option value="none">Laptop only</option>
+      </select>
+    </label>
+    <button type="submit">Launch the full wizard →</button>
+  </form>
+</aside>
+
+<style>
+  .cb-mini-wizard {
+    --cb-accent: #0d6060;
+    --cb-accent-dark: #084040;
+    --cb-bg: #f7f5f0;
+    --cb-border: #d8d3c7;
+    --cb-muted: #55605c;
+
+    background: var(--cb-bg);
+    border: 1px solid var(--cb-border);
+    border-left: 3px solid var(--cb-accent);
+    border-radius: 6px;
+    padding: 1.1rem 1.25rem 1.2rem;
+    margin: 1.5rem 0;
+    max-width: 560px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 Helvetica, Arial, sans-serif;
+    color: #1c1c1c;
+    line-height: 1.55;
+  }
+  .cb-mini-wizard .cb-mini-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--cb-accent-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .cb-mini-wizard h3 {
+    margin: 0.25rem 0 0.3rem;
+    font-family: Georgia, "Iowan Old Style", "Apple Garamond", serif;
+    color: var(--cb-accent-dark);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .cb-mini-wizard > p {
+    margin: 0 0 0.9rem;
+    color: var(--cb-muted);
+    font-size: 0.92rem;
+  }
+  .cb-mini-wizard form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem 0.85rem;
+  }
+  .cb-mini-wizard label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .cb-mini-wizard label span {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cb-accent-dark);
+  }
+  .cb-mini-wizard select {
+    padding: 0.42rem 0.55rem;
+    font: inherit;
+    font-size: 0.92rem;
+    border: 1px solid var(--cb-border);
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+  }
+  .cb-mini-wizard select:focus {
+    outline: 2px solid var(--cb-accent);
+    outline-offset: 1px;
+  }
+  .cb-mini-wizard button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 0.55rem 1.2rem;
+    font: inherit;
+    font-weight: 600;
+    background: var(--cb-accent);
+    color: white;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0.35rem;
+    transition: background 0.12s;
+  }
+  .cb-mini-wizard button:hover { background: var(--cb-accent-dark); }
+  @media (max-width: 480px) {
+    .cb-mini-wizard form { grid-template-columns: 1fr; }
+  }
+</style>

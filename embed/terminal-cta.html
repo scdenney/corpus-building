@@ -1,0 +1,148 @@
+<!-- corpus-building: terminal-style CTA
+     Copy-paste into the Methods > Computational & quantitative approaches
+     landing page (or anywhere a playful call-to-action for the wizard fits).
+     Self-contained HTML + CSS — no JS. Animates on first paint: the command
+     types itself in, then the cursor settles into a blink.
+-->
+
+<a class="cb-term" href="https://scdenney.github.io/corpus-building/"
+   aria-label="Launch the corpus-building wizard">
+  <div class="cb-term-bar">
+    <span class="cb-term-dot cb-dot-r" aria-hidden="true"></span>
+    <span class="cb-term-dot cb-dot-y" aria-hidden="true"></span>
+    <span class="cb-term-dot cb-dot-g" aria-hidden="true"></span>
+    <span class="cb-term-title">corpus-building — ~</span>
+  </div>
+  <div class="cb-term-body">
+    <div class="cb-term-line">
+      <span class="cb-term-prompt">$</span>
+      <span class="cb-term-cmd-wrap">
+        <span class="cb-term-cmd">corpus-building-wizard</span><span class="cb-term-cursor">▍</span>
+      </span>
+    </div>
+    <div class="cb-term-caption">
+      Turn a folder of PDFs into an analysis-ready text corpus.
+      Wizard hands you a starter kit for Claude Code or Codex.
+      <span class="cb-term-arrow">→</span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .cb-term {
+    --cb-term-bg: #0f1a1a;
+    --cb-term-bar: #1a2b2b;
+    --cb-term-border: #0a1313;
+    --cb-term-fg: #dcecea;
+    --cb-term-dim: #94b3b0;
+    --cb-term-accent: #5ecbc0;
+
+    display: block;
+    max-width: 640px;
+    margin: 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--cb-term-bg);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 Helvetica, Arial, sans-serif;
+  }
+  .cb-term:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+  .cb-term:focus-visible {
+    outline: 2px solid var(--cb-term-accent);
+    outline-offset: 2px;
+  }
+
+  .cb-term-bar {
+    background: var(--cb-term-bar);
+    padding: 0.5rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--cb-term-border);
+  }
+  .cb-term-dot {
+    width: 11px; height: 11px; border-radius: 50%;
+    display: inline-block;
+  }
+  .cb-dot-r { background: #ff5f56; }
+  .cb-dot-y { background: #ffbd2e; }
+  .cb-dot-g { background: #27c93f; }
+  .cb-term-title {
+    margin-left: 0.7rem;
+    color: var(--cb-term-dim);
+    font-size: 0.76rem;
+    font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .cb-term-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    color: var(--cb-term-fg);
+  }
+  .cb-term-line {
+    font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    white-space: nowrap;
+  }
+  .cb-term-prompt { color: var(--cb-term-accent); font-weight: 700; }
+  .cb-term-cmd-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    position: relative;
+  }
+  .cb-term-cmd {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 22ch;
+    vertical-align: baseline;
+    animation: cb-term-type 1.3s steps(22, end) 0.4s both;
+  }
+  @keyframes cb-term-type {
+    from { width: 0; }
+    to   { width: 22ch; }
+  }
+  .cb-term-cursor {
+    display: inline-block;
+    color: var(--cb-term-accent);
+    margin-left: 0.05rem;
+    animation: cb-term-blink 1.1s steps(2, end) 1.8s infinite;
+  }
+  @keyframes cb-term-blink {
+    0%, 49%  { opacity: 1; }
+    50%,100% { opacity: 0; }
+  }
+
+  .cb-term-caption {
+    margin-top: 0.85rem;
+    color: var(--cb-term-dim);
+    font-size: 0.87rem;
+    line-height: 1.55;
+  }
+  .cb-term-arrow {
+    color: var(--cb-term-accent);
+    font-weight: 700;
+    margin-left: 0.15rem;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  .cb-term:hover .cb-term-arrow { transform: translateX(3px); }
+  .cb-term:hover .cb-term-cmd { color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-term-cmd { animation: none; width: auto; }
+    .cb-term-cursor { animation: none; }
+    .cb-term:hover { transform: none; }
+  }
+</style>
