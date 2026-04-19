@@ -41,7 +41,7 @@ flowchart LR
 
 ## Quick start
 
-**See what it produces.** Read a worked scenario at student scale (~75 documents):
+**See what it produces.** Start with a student-scale example (~75 documents):
 
 - [Small corpus via cloud API](examples/small_api.md) — Korean newspaper editorials, laptop only, ~$10
 - [Small corpus via ALICE HPC](examples/small_alice.md) — historical Korean newspapers, free compute

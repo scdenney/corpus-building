@@ -42,7 +42,7 @@ A set of **Claude Code skills** and **companion shell scripts** that walk studen
 
 **Why it's needed**: The existing `vlm-ocr-pipeline` and `post-ocr-cleanup` skills cover the technical how, but students need help with the what and why — what metadata to track, how to structure the corpus for their specific analysis, which OCR approach fits their situation.
 
-**Teaching angle**: Decision tree for OCR approach (Do you have GPU access? → How many pages? → What languages? → What's your budget?). Worked examples from GEI textbooks and Webtoon projects.
+**Teaching angle**: Decision tree for OCR approach (Do you have GPU access? → How many pages? → What languages? → What's your budget?). Concrete examples from GEI textbooks and Webtoon projects.
 
 ### 2. `alice-vllm-deploy`
 **What it does**: Guides deployment and execution of a vLLM-based OCR pipeline on ALICE HPC (or similar SLURM clusters). Covers: syncing code/data, verifying venv and model weights, SLURM job configuration, partition selection, monitoring, and troubleshooting.
@@ -56,7 +56,7 @@ A set of **Claude Code skills** and **companion shell scripts** that walk studen
 
 **Why it's needed**: Students often under-specify metadata (just filename + text) or over-engineer it. A good schema is the difference between a usable corpus and a pile of text files.
 
-**Teaching angle**: Start from the analysis question ("What will you filter/group/compare?"), derive the schema backwards. Worked examples for different corpus types.
+**Teaching angle**: Start from the analysis question ("What will you filter/group/compare?"), derive the schema backwards. Concrete examples for different corpus types.
 
 ### 4. `api-ocr-runner`
 **What it does**: Guides OCR via cloud APIs (Claude, GPT, Gemini) as an alternative to HPC. Covers: cost estimation, provider selection, rate limiting, resume logic, when API makes sense vs. HPC.

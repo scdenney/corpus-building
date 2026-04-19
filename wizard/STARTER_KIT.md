@@ -1,6 +1,6 @@
 # Wizard Output: The Starter Kit
 
-What the wizard renders after a student answers the 6 questions in `QUESTIONS.md`. The wizard is a static page; this spec defines the structure of its output card, and the rendered HTML must match it. Three worked examples at the bottom show what the card looks like for the three canonical routing outcomes.
+What the wizard renders after a student answers the 6 questions in `QUESTIONS.md`. The wizard is a static page; this spec defines the structure of its output card, and the rendered HTML must match it. Three concrete examples at the bottom show what the card looks like for the three canonical routing outcomes.
 
 **Design principles**
 
@@ -61,7 +61,7 @@ A single button: `mailto:stevencdenney@gmail.com` with subject and body pre-fill
 
 ---
 
-## Worked examples
+## Example outputs
 
 Three canonical routing outcomes at student scale (~75 articles). These are the scenario demos for `examples/`.
 

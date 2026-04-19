@@ -233,7 +233,7 @@ def main(argv: list[str] | None = None) -> int:
     #
     # - Series / collection identification: parse pdf_path parts against a
     #   dict of regex patterns (see /Thesis/pipeline/inventory.py for a
-    #   worked example with three series).
+    #   sample case with three series).
     # - Chapter / episode numbers: add a CHAPTER_PATTERNS dict keyed by
     #   (series, language) and run against the NFC-normalized filename.
     # - Additional metadata (year, author, edition): parse from filename,
