@@ -10,7 +10,7 @@ title: "Small corpus via ALICE HPC"
 
 ## The situation
 
-A grad student studying press coverage during the Polish People's Republic has 75 historical newspaper issues (~800 pages, 1960s–1980s). Text contains Polish diacritics (ą, ć, ę, ł, ń, ó, ś, ź, ż) and occasional pre-reform spelling. Analysis target: `stm` in R for topic modelling by year. ALICE account active, no API budget allocated.
+A grad student studying democratization discourse in late-1970s South Korea has 75 historical newspaper issues (~800 pages, 1960s–1980s). Text mixes Hangul, occasional Hanja, and uneven archival print. Analysis target: Python topic modelling and keyword work grouped by year. ALICE account active, no API budget allocated.
 
 ## Wizard answers
 
@@ -18,9 +18,9 @@ A grad student studying press coverage during the Polish People's Republic has 7
 |----------|--------|
 | How many pages? | 501–1,000 |
 | What compute? | ALICE account, ready to use |
-| Languages/scripts? | Historical scripts / older orthographies |
+| Languages/scripts? | Multiple scripts in one corpus |
 | Document type? | Newspapers or multi-column layouts |
-| What software? | R |
+| What software? | Python |
 | Resource constraints? | No budget; time flexible |
 
 **Route:** ALICE path. `alice-vllm-deploy` covers SLURM, cold-start timing, SSH discipline.
@@ -38,20 +38,20 @@ Est. time:       ~13 min cold start + ~90 min OCR + ~10 min post-processing
 
 **Read first**
 1. `corpus-from-pdfs` — end-to-end framing
-2. `corpus-metadata-design` — schema for R `stm`
+2. `corpus-metadata-design` — schema for Python output
 3. `alice-vllm-deploy` — SLURM, cold-start timing, SSH discipline
 
 **Paste into Claude Code / Codex**
-> I have 75 Polish historical newspaper scans (roughly 800 pages). The text uses Polish diacritics (ą, ć, ę, ł, ń, ó, ś, ź, ż) and occasional pre-reform spelling. I have an ALICE account and want to run vLLM on `gpu_lucdh`. My analysis target is `stm` in R. Walk me through the `corpus-from-pdfs` pipeline. Start by helping me fill in the SLURM template and the Polish prompt. Then help me deploy and monitor the job.
+> I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on `gpu_lucdh`. My analysis target is Python topic modelling grouped by year. Walk me through the `corpus-from-pdfs` pipeline. Start by helping me fill in the SLURM template and the Korean prompt. Then help me deploy and monitor the job.
 
 **Or launch a fresh session directly**
 
 ```bash
-claude "I have 75 Polish historical newspaper scans (roughly 800 pages). The text uses Polish diacritics and occasional pre-reform spelling. I have an ALICE account and want to run vLLM on gpu_lucdh. My analysis target is stm in R. Walk me through the corpus-from-pdfs pipeline."
+claude "I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on gpu_lucdh. My analysis target is Python topic modelling grouped by year. Walk me through the corpus-from-pdfs pipeline."
 ```
 
 **Files to copy**
-- `templates/prompts.py.template` → `prompts.py` (Pattern A, Polish diacritics enumerated)
+- `templates/prompts.py.template` → `prompts.py` (Pattern B, Korean newspaper pages with type tags)
 - `templates/run_ocr.slurm.template` → `run_ocr.slurm` (project name, `gpu_lucdh`, model, account flag uncommented)
 
 **Commands (pre-filled)**
@@ -61,10 +61,10 @@ bash scripts/alice_deploy.sh \
     --host alice3 \
     --code-src ./pipeline --data-src ./newspapers \
     --manifest ./manifest.csv \
-    --remote-base /zfsstore/user/<netid>/polish-news
-ssh alice3 "cd /zfsstore/user/<netid>/polish-news/pipeline && sbatch run_ocr.slurm"
+    --remote-base /zfsstore/user/<netid>/korean-news
+ssh alice3 "cd /zfsstore/user/<netid>/korean-news/pipeline && sbatch run_ocr.slurm"
 # …wait for the SLURM job to finish (monitor via squeue + log tail)…
-python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv --output corpus/
+python3 scripts/corpus_assembler.py --parse-tags --ocr-dir ocr_output --manifest manifest.csv --output corpus/
 ```
 
 ---
@@ -90,36 +90,34 @@ Manifest: manifest.csv
 
 ### Step 2 — Fill `prompts.py`
 
-Inside Claude Code, the student opens `prompts.py` (copied from the template) and fills Pattern A for Polish:
+Inside Claude Code, the student opens `prompts.py` (copied from the template) and fills Pattern B for Korean newspaper pages:
 
 ```python
 PROMPTS = {
-    "polish": (
-        "Extract all text from this document image. "
-        "The text is in Polish and contains Polish diacritical characters "
-        "(ą, ć, ę, ł, ń, ó, ś, ź, ż). "
-        "Transcribe every character exactly as it appears. "
-        "Output in markdown format preserving headings, paragraphs, "
-        "footnotes, and tables. "
+    "korean_news": (
+        "Extract all text from this newspaper page image. "
+        "The text is mostly Korean (Hangul) with some Hanja. "
+        "Use the provided type tags for headline, body, caption, table, and note blocks. "
+        "Preserve the original wording and reading order as closely as possible. "
         "If the page has no text at all, output only: [NO_TEXT]. "
         "Do not translate or interpret the text."
     ),
 }
-LANGUAGE_PROMPT_MAP = {"polish": "polish"}
+LANGUAGE_PROMPT_MAP = {"korean_news": "korean_news"}
 ```
 
-Claude Code reviews this against the `corpus-from-pdfs` guidance on character enumeration and confirms it's ready. No `VALID_TAGS` needed — Pattern A doesn't use type tags.
+Claude Code reviews this against the `corpus-from-pdfs` guidance on tagged newspaper extraction and confirms it's ready. `VALID_TAGS` is enabled because the student wants clean separation between headlines, body text, captions, and notes.
 
 ### Step 3 — Fill `run_ocr.slurm`
 
 From the template, with the student's values substituted:
 
-- `{{PROJECT_NAME}}` → `polish-news`
+- `{{PROJECT_NAME}}` → `korean-news`
 - `{{PARTITION}}` → `gpu_lucdh`
 - `{{WALL_TIME}}` → `04:00:00`
 - `{{GPU_SPEC}}` → `gpu:1`
 - `#SBATCH --account=gpu_lucdh` line uncommented
-- `{{PIPELINE_DIR}}` → `/zfsstore/user/<netid>/polish-news/pipeline`
+- `{{PIPELINE_DIR}}` → `/zfsstore/user/<netid>/korean-news/pipeline`
 - `{{MODEL_ID}}` → `Qwen/Qwen3.5-35B-A3B-GPTQ-Int4`
 - `{{QUANT_BACKEND}}` → `gptq_marlin`
 - Client / diagnostics / assembler script placeholders → filenames from the pipeline
@@ -131,7 +129,7 @@ bash scripts/alice_deploy.sh \
     --host alice3 \
     --code-src ./pipeline --data-src ./newspapers \
     --manifest ./manifest.csv \
-    --remote-base /zfsstore/user/<netid>/polish-news
+    --remote-base /zfsstore/user/<netid>/korean-news
 ```
 
 Output sketch:
@@ -141,8 +139,8 @@ Output sketch:
 alice_deploy.sh
 ==============================================
 Host:        alice3
-Code:        ./pipeline  →  alice3:/zfsstore/user/<netid>/polish-news/pipeline
-Data:        ./newspapers  →  alice3:/zfsstore/user/<netid>/polish-news/data
+Code:        ./pipeline  →  alice3:/zfsstore/user/<netid>/korean-news/pipeline
+Data:        ./newspapers  →  alice3:/zfsstore/user/<netid>/korean-news/data
 ==============================================
 
 --- Syncing code ---
@@ -156,12 +154,12 @@ Data:        ./newspapers  →  alice3:/zfsstore/user/<netid>/polish-news/data
   Output: ./pipeline/manifest_alice.csv
 ```
 
-The student checks `manifest_alice.csv` — every `pdf_path` now starts with `/zfsstore/user/<netid>/polish-news/data/`.
+The student checks `manifest_alice.csv` — every `pdf_path` now starts with `/zfsstore/user/<netid>/korean-news/data/`.
 
 ### Step 5 — Submit the job
 
 ```bash
-ssh alice3 "cd /zfsstore/user/<netid>/polish-news/pipeline && sbatch run_ocr.slurm"
+ssh alice3 "cd /zfsstore/user/<netid>/korean-news/pipeline && sbatch run_ocr.slurm"
 # Submitted batch job 2847193
 ```
 
@@ -175,7 +173,7 @@ Early on, the log shows Python imports (no visible GPU activity is normal):
 
 ```
 ==============================================
-polish-news OCR via vLLM
+korean-news OCR via vLLM
 ==============================================
 Job ID:    2847193
 Node:      node852
@@ -205,8 +203,8 @@ Total job runtime: ~13 min cold start + ~90 min OCR + ~10 min CPU stages ≈ 1h 
 ### Step 6 — Pull results and assemble (local)
 
 ```bash
-rsync -avz alice3:/zfsstore/user/<netid>/polish-news/ocr_output/ ./ocr_output/
-python3 scripts/corpus_assembler.py \
+rsync -avz alice3:/zfsstore/user/<netid>/korean-news/ocr_output/ ./ocr_output/
+python3 scripts/corpus_assembler.py --parse-tags \
     --ocr-dir ocr_output \
     --manifest manifest.csv \
     --output corpus/
@@ -219,14 +217,13 @@ python3 scripts/corpus_assembler.py \
   Text density:   99.1%
 ```
 
-### Step 7 — Analyze in R
+### Step 7 — Analyze in Python
 
-```r
-library(tidytext)
-library(stm)
+```python
+import pandas as pd
 
-corpus <- read.csv("corpus/corpus.csv", encoding = "UTF-8")
-# ...proceed to stm preprocessing and model fitting
+corpus = pd.read_csv("corpus/corpus.csv")
+# ...proceed to Korean tokenisation and topic modelling
 ```
 
 ---
@@ -234,5 +231,5 @@ corpus <- read.csv("corpus/corpus.csv", encoding = "UTF-8")
 ## What would change at a different scale?
 
 - **Larger corpus (>5k pages):** same path, longer wall time. Switch to `gpu-a100-80g` partition if the `gpu_lucdh` queue is backed up.
-- **Mixed scripts in the corpus:** split the manifest by language, run separate SLURM jobs with the appropriate prompt per language.
+- **Mixed scripts in the corpus:** split the manifest by layout or decade if one prompt no longer handles the variation cleanly.
 - **No ALICE account:** wizard routes to API (see [`small_api`](small_api.html)) or local GPU (see [`small_local_gpu`](small_local_gpu.html)). Under $15 for the same corpus on Claude.

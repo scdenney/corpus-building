@@ -82,32 +82,55 @@ h1 {
 
 /* "What this assumes" drop-down below the lede ------------------------- */
 .more-info {
-  margin: 0.5rem 0 0;
+  margin: 0.85rem 0 0;
+  max-width: 42rem;
 }
 .more-info > summary {
   cursor: pointer;
   list-style: none;
-  display: inline-block;
-  padding: 0.15rem 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-  font-weight: 500;
-  border-bottom: 1px dashed var(--border);
-  transition: color 0.12s, border-color 0.12s;
-}
-.more-info > summary::-webkit-details-marker { display: none; }
-.more-info > summary::marker { content: ""; }
-.more-info > summary:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.more-info[open] > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.82rem 1rem;
   color: var(--accent-dark);
-  border-bottom-color: var(--accent-dark);
+  font-size: 0.94rem;
+  font-weight: 600;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #fcfbf8);
+  transition: border-color 0.12s ease, background-color 0.12s ease, box-shadow 0.12s ease;
+}
+.more-info > summary::-webkit-details-marker,
+.callout summary::-webkit-details-marker { display: none; }
+.more-info > summary::marker,
+.callout summary::marker { content: ""; }
+.more-info > summary::after,
+.callout summary::after {
+  content: "+";
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.more-info > summary:hover,
+.callout summary:hover {
+  border-color: rgba(13, 96, 96, 0.22);
+  box-shadow: 0 10px 22px rgba(13, 96, 96, 0.07);
+}
+.more-info[open] > summary,
+.callout[open] summary {
+  border-color: rgba(13, 96, 96, 0.28);
+  background: linear-gradient(180deg, #ffffff, #f6f1e6);
+}
+.more-info[open] > summary::after,
+.callout[open] summary::after {
+  content: "–";
 }
 .more-info-body {
   margin-top: 0.75rem;
-  padding-top: 0.75rem;
+  padding: 0.95rem 1rem 0;
   border-top: 1px solid var(--border-soft);
 }
 .more-info-body p {
@@ -311,22 +334,27 @@ button[type="submit"]:hover {
   background: var(--callout-bg);
   border: 1px solid var(--border-soft);
   border-radius: 14px;
-  padding: 0.7rem 1rem;
+  padding: 0.7rem;
   font-size: 0.93rem;
   margin-top: -0.3rem;
 }
 .callout summary {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.9rem 1rem;
   font-weight: 600;
   color: var(--accent-dark);
-  padding: 0.2rem 0;
   user-select: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.45);
 }
-.callout summary:hover { color: var(--accent); }
 .callout[open] summary {
-  margin-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border-soft);
-  padding-bottom: 0.4rem;
+  margin-bottom: 0.7rem;
 }
 .callout code {
   background: var(--code-bg);
