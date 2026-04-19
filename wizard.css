@@ -298,7 +298,7 @@ form label {
 select {
   padding: 0.7rem 0.8rem;
   font: inherit;
-  font-size: 1rem; /* 16px minimum to prevent iOS form-input auto-zoom */
+  font-size: 0.96rem;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: white;
@@ -767,65 +767,6 @@ article.scenario hr {
   .footer-inner { grid-template-columns: 1fr; gap: 0.9rem; }
   .footer-contact { justify-self: start; align-items: flex-start; }
   .footer-links { gap: 0.35rem 0.8rem; }
-}
-
-/* Phone portrait — tighter paddings and type */
-@media (max-width: 480px) {
-  body {
-    padding: 0.85rem 0.9rem 3rem;
-  }
-  .top-actions {
-    gap: 0.5rem;
-  }
-  .context-link, .gh-link {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.75rem;
-  }
-  h1 { font-size: clamp(1.75rem, 8vw, 2.2rem); }
-  .lede { font-size: 1rem; line-height: 1.6; }
-  .byline { font-size: 0.85rem; }
-  .cold-entry { padding: 0.85rem 1rem; }
-  form {
-    padding: 1rem 0.95rem;
-    gap: 0.85rem;
-  }
-  .q { font-size: 0.95rem; }
-  select {
-    padding: 0.62rem 0.7rem;
-    min-height: 2.75rem;
-  }
-  button[type="submit"] {
-    padding: 0.72rem 1.1rem;
-  }
-  .kit {
-    padding: 1.15rem 1.05rem;
-  }
-  .kit-path { font-size: 1.2rem; line-height: 1.15; }
-  .kit-header dt { font-size: 0.8rem; }
-  .kit-header dd { font-size: 0.92rem; }
-  .kit-header dl {
-    grid-template-columns: 1fr;
-    gap: 0.05rem 0;
-  }
-  .kit-header dt { margin-top: 0.35rem; }
-  pre.prompt, pre.code {
-    font-size: 0.82rem;
-    padding: 0.65rem 0.75rem;
-  }
-  article.scenario {
-    padding: 1.2rem 1.05rem;
-  }
-  article.scenario h1 { font-size: 1.4rem; }
-  article.scenario h2 { font-size: 1.1rem; }
-  .callout .option h4 { font-size: 0.95rem; }
-  .callout .option .pitch { font-size: 0.92rem; }
-  .callout .option .access { font-size: 0.87rem; }
-}
-
-/* Prevent long URLs / code tokens from overflowing on narrow viewports */
-.lede, .byline, .more-info-body, article.scenario, .kit, .cold-entry {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
 }
 
 @media (prefers-reduced-motion: reduce) {
