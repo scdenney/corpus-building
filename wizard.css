@@ -1,0 +1,479 @@
+/* wizard.css — styling for the corpus-building wizard */
+
+:root {
+  --fg: #1c1c1c;
+  --muted: #55605c;
+  --accent: #0d6060;           /* deep teal — academic, distinct from default blue */
+  --accent-dark: #084040;
+  --bg: #f7f5f0;               /* warm off-white, paper-ish */
+  --card: #ffffff;
+  --border: #d8d3c7;
+  --border-soft: #e8e4d9;
+  --code-bg: #f2efe7;
+  --callout-bg: #f1ede1;
+  --escalate: #a3462a;
+  --escalate-bg: #fbf1e9;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-padding-top: 1rem; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  line-height: 1.55;
+}
+
+/* Typography -------------------------------------------------------------- */
+h1 {
+  font-family: Georgia, "Iowan Old Style", "Apple Garamond", serif;
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.25rem;
+}
+.lede {
+  color: var(--fg);
+  margin: 0.35rem 0 0.6rem;
+  font-size: 1.0rem;
+  line-height: 1.6;
+}
+.lede strong { color: var(--accent-dark); font-weight: 600; }
+.scope-note {
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-soft);
+}
+.scope-note em { font-style: italic; color: var(--fg); }
+h2 {
+  font-family: Georgia, "Iowan Old Style", "Apple Garamond", serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 1.25rem;
+}
+h3 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header + GitHub badge --------------------------------------------------- */
+.gh-link {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+.gh-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+header {
+  margin-bottom: 0.75rem;
+  margin-right: 7rem; /* leave room for the GitHub badge on wider screens */
+}
+
+/* Cold entry box ---------------------------------------------------------- */
+.cold-entry {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.85rem 1.1rem;
+  margin-top: 1rem;
+  font-size: 0.94rem;
+}
+.cold-entry p { margin: 0 0 0.4rem; color: var(--muted); }
+.scenarios { list-style: none; padding-left: 0; margin: 0; }
+.scenarios li { padding: 0.2rem 0; }
+.scenarios a { font-weight: 600; }
+.scenario-note {
+  color: var(--muted);
+  font-size: 0.88em;
+  margin-left: 0.4rem;
+}
+
+/* Form -------------------------------------------------------------------- */
+form {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+form > h2:first-child { margin-top: 0; }
+form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.q {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+.q em {
+  font-weight: 400;
+  color: var(--muted);
+  font-style: normal;
+  font-size: 0.9em;
+}
+select {
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+  font-size: 0.96rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button[type="submit"] {
+  align-self: flex-start;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  transition: background 0.1s;
+}
+button[type="submit"]:hover { background: var(--accent-dark); }
+
+/* Callout (details/summary) ---------------------------------------------- */
+.callout {
+  background: var(--callout-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-size: 0.93rem;
+  margin-top: -0.3rem;
+}
+.callout summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent-dark);
+  padding: 0.2rem 0;
+  user-select: none;
+}
+.callout summary:hover { color: var(--accent); }
+.callout[open] summary {
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 0.4rem;
+}
+.callout code {
+  background: var(--code-bg);
+  padding: 0.05em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Compute option cards inside the callout */
+.callout .options {
+  margin: 0.2rem 0 0;
+}
+.callout .option {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.callout .option:first-child { padding-top: 0.4rem; }
+.callout .option:last-child { border-bottom: 0; padding-bottom: 0.2rem; }
+.callout .option h4 {
+  margin: 0 0 0.3rem;
+  color: var(--accent-dark);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+.callout .option .pitch {
+  margin: 0 0 0.3rem;
+  color: var(--fg);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.callout .option .access {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.callout .option .access a { font-weight: 500; }
+.callout .option .examples {
+  margin: 0.3rem 0 0.5rem;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+.callout .option .examples li {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--fg);
+  margin: 0.25rem 0;
+}
+.callout .option .examples strong {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+.callout .option .caveat {
+  margin: 0.4rem 0 0;
+  padding: 0.35rem 0.6rem;
+  background: rgba(163, 70, 42, 0.07);
+  border-left: 2px solid var(--escalate);
+  border-radius: 0 3px 3px 0;
+  color: var(--fg);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Output kit -------------------------------------------------------------- */
+.hidden { display: none; }
+
+.kit {
+  margin-top: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+}
+.kit.escalate {
+  border-color: var(--escalate);
+  background: var(--escalate-bg);
+}
+
+.kit-header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.kit-path {
+  font-family: Georgia, "Iowan Old Style", serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  margin-bottom: 0.6rem;
+}
+.kit.escalate .kit-path { color: var(--escalate); }
+
+.kit-header dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.9rem;
+  margin: 0;
+}
+.kit-header dt {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.kit-header dd { margin: 0; font-size: 0.96rem; }
+
+.kit section { margin-top: 1.4rem; }
+.kit section:first-of-type { margin-top: 0; }
+
+.kit ul { padding-left: 1.25rem; margin: 0.3rem 0; }
+.kit li { margin: 0.22rem 0; }
+
+.section-note { color: var(--muted); font-size: 0.94rem; margin: 0.2rem 0 0.6rem; }
+.section-note.alt { margin-top: 1.1rem; }
+
+.launch-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0.8rem 0 0.25rem;
+}
+
+pre.prompt, pre.code {
+  background: var(--code-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0.75rem 0.9rem;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--fg);
+}
+pre.code { white-space: pre; word-break: normal; }
+pre.code.launch {
+  background: #0f1a1a;
+  color: #dcecea;
+  border-color: #0a1313;
+}
+
+button.copy {
+  margin-top: 0.4rem;
+  padding: 0.32rem 0.8rem;
+  font: inherit;
+  font-size: 0.84rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--accent-dark);
+}
+button.copy:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.mailto {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  font-weight: 500;
+}
+.mailto:hover { background: var(--accent); color: white; text-decoration: none; }
+.kit.escalate .mailto {
+  background: var(--escalate);
+  color: white;
+  border-color: var(--escalate);
+}
+.kit.escalate .mailto:hover { background: #7d3421; border-color: #7d3421; }
+
+.note {
+  color: var(--escalate);
+  margin: 0 0 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-soft);
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* Scenario pages (rendered from examples/*.md by Jekyll) ----------------- */
+.scenario-page header { margin-right: 7rem; }
+.breadcrumb {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+article.scenario {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+}
+
+article.scenario h1 {
+  margin-top: 0;
+  margin-bottom: 0.6rem;
+  font-size: 1.7rem;
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 0.6rem;
+}
+article.scenario h2 {
+  font-family: Georgia, "Iowan Old Style", serif;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  color: var(--accent-dark);
+}
+article.scenario h3 {
+  font-size: 1rem;
+  margin-top: 1.4rem;
+  color: var(--accent-dark);
+}
+article.scenario p,
+article.scenario li {
+  font-size: 0.97rem;
+  line-height: 1.62;
+}
+article.scenario strong { color: var(--fg); }
+
+article.scenario code {
+  background: var(--code-bg);
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+article.scenario pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 0.75rem 0.95rem;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+article.scenario pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
+
+article.scenario blockquote {
+  margin: 1rem 0;
+  border-left: 3px solid var(--accent);
+  background: var(--callout-bg);
+  padding: 0.6rem 1rem;
+  color: var(--fg);
+  border-radius: 0 4px 4px 0;
+}
+article.scenario blockquote p { margin: 0.25rem 0; }
+
+article.scenario table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.94rem;
+  width: 100%;
+}
+article.scenario th,
+article.scenario td {
+  border: 1px solid var(--border-soft);
+  padding: 0.4rem 0.7rem;
+  text-align: left;
+}
+article.scenario th {
+  background: var(--callout-bg);
+  font-weight: 600;
+  color: var(--accent-dark);
+}
+article.scenario hr {
+  border: 0;
+  border-top: 1px solid var(--border-soft);
+  margin: 2rem 0;
+}

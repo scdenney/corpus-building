@@ -1,0 +1,25 @@
+title: Corpus Building Wizard
+description: Turn a folder of PDFs into an analysis-ready text corpus. Answer six questions, get a starter kit for Claude Code or Codex.
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Apply the default layout to every rendered page so scenarios and skill
+# files inherit the wizard look automatically.
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Don't publish working files to the site.
+exclude:
+  - CLAUDE.md
+  - scripts
+  - templates
+  - wizard/QUESTIONS.md
+  - wizard/STARTER_KIT.md
+  - SOURCES.md
+  - README.md

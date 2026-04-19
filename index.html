@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corpus Building Wizard</title>
+<link rel="stylesheet" href="wizard.css">
+</head>
+<body>
+
+<a class="gh-link" href="#" aria-label="View on GitHub">View on GitHub</a>
+
+<header>
+  <h1>Corpus Building Wizard</h1>
+  <p class="lede">A <strong>text corpus</strong> is a structured collection of documents — typically one row per article or page, with metadata — ready to load into analysis software like Orange, R, or Python. Building one from a folder of scanned PDFs is a multi-step pipeline: OCR, cleanup, metadata schema, assembly.</p>
+  <p class="lede">This wizard asks six questions about your project, routes you to the right OCR approach for your compute and scale, and hands you a <strong>starter kit</strong> — skills to read, templates to copy, and a one-line command that launches Claude Code or Codex with your specifics already in context.</p>
+  <p class="scope-note">Built primarily for students and staff at Leiden University; works for anyone with PDFs and a Claude or OpenAI account. The wizard covers <em>building</em> the corpus. What you do with it afterwards — topic modelling, NER, classification — is downstream and handled in a separate module.</p>
+</header>
+
+<section class="cold-entry">
+  <p>Rather skip the wizard and see what it produces? Read a worked scenario:</p>
+  <ul class="scenarios">
+    <li><a href="examples/small_api.html">Small corpus via cloud API</a> <span class="scenario-note">75 articles, laptop only, ~$10</span></li>
+    <li><a href="examples/small_alice.html">Small corpus via ALICE HPC</a> <span class="scenario-note">75 newspapers, free compute, historical Polish</span></li>
+    <li><a href="examples/small_local_gpu.html">Small corpus on a local GPU</a> <span class="scenario-note">75 reports, 24 GB+ VRAM, no cloud cost</span></li>
+  </ul>
+</section>
+
+<form id="wizard">
+  <h2>Tell us about your corpus</h2>
+
+  <label>
+    <span class="q">1. How many pages total?</span>
+    <select name="pages" required>
+      <option value="">— pick one —</option>
+      <option value="lt100">Less than 100</option>
+      <option value="101_500">101–500</option>
+      <option value="501_1k">501–1,000</option>
+      <option value="1k_5k">1,001–5,000</option>
+      <option value="5k_10k">5,001–10,000</option>
+      <option value="gt10k">More than 10,000</option>
+    </select>
+  </label>
+
+  <label>
+    <span class="q">2. What compute do you have access to?</span>
+    <select name="compute" required>
+      <option value="">— pick one —</option>
+      <option value="alice">ALICE account, ready to use</option>
+      <option value="lucdh">LUCDH workstation access</option>
+      <option value="other_slurm">Different SLURM cluster</option>
+      <option value="gpu_big">Local GPU with 16 GB or more</option>
+      <option value="gpu_small">Local GPU with less than 16 GB</option>
+      <option value="none">None — laptop only</option>
+    </select>
+  </label>
+
+  <details class="callout">
+    <summary>What are ALICE, LUCDH, and the other options? How do I get access?</summary>
+    <div class="options">
+
+      <article class="option">
+        <h4>ALICE</h4>
+        <p class="pitch">Leiden's HPC cluster. A40 (48 GB) and A100 (80 GB) GPUs, free for students and staff with a research case.</p>
+        <p class="access">Request an account through Leiden IT — approval takes a few days. <a href="https://pubappslu.atlassian.net/wiki/spaces/HPCWIKI" target="_blank" rel="noopener">ALICE wiki →</a></p>
+      </article>
+
+      <article class="option">
+        <h4>LUCDH Digital Lab</h4>
+        <p class="pitch">Walk-in workstations in the Huizinga building (room 0.09). Two graphically-capable desktops for local GPU work, plus specialty kit like Transkribus imaging and VR.</p>
+        <p class="access">Open 10–17 during semesters, no reservation needed for the general space. Email <a href="mailto:digital-lab@hum.leidenuniv.nl">digital-lab@hum.leidenuniv.nl</a> for specialty equipment. <a href="https://www.universiteitleiden.nl/en/humanities/centre-for-digital-humanities/digital-lab" target="_blank" rel="noopener">Digital Lab page →</a></p>
+        <p class="caveat">Local files aren't retained between sessions — use external or cloud storage.</p>
+      </article>
+
+      <article class="option">
+        <h4>LUCDH AI Lab</h4>
+        <p class="pitch">Deeper compute for deep learning and HPC, granted on request.</p>
+        <p class="access">Contact Jelena Prokic if your project outgrows a single workstation. <a href="https://www.universiteitleiden.nl/en/humanities/centre-for-digital-humanities/hub/ai-lab" target="_blank" rel="noopener">AI Lab page →</a></p>
+      </article>
+
+      <article class="option">
+        <h4>Different SLURM cluster</h4>
+        <p class="pitch">Non-Leiden HPC — your host institution or a national cluster.</p>
+        <p class="access">The <code>alice-vllm-deploy</code> skill covers the patterns; most port cleanly with minor edits to partition names and module loads.</p>
+      </article>
+
+      <article class="option">
+        <h4>Local GPU</h4>
+        <p class="pitch">A home machine with an NVIDIA GPU. Two realistic examples for student-scale OCR:</p>
+        <ul class="examples">
+          <li><strong>Running on 8 GB</strong> (RTX 4060, RTX 4060 Ti 8 GB) — Qwen3-VL-8B at 4-bit is tight but workable; drop the input resolution a little to stay comfortable. Expect ~10 s/page.</li>
+          <li><strong>Running on 8–12 GB</strong> (RTX 3060 12 GB, RTX 4070) — Qwen3-VL-8B fits with room to breathe. ~8 s/page.</li>
+        </ul>
+        <p class="access">Check yours with <code>nvidia-smi</code>. 16 GB+ (RTX 4070 Ti Super, 4080) steps you up to a 13B model; 24 GB+ (RTX 4090) runs a 32B. Under 8 GB, take the API path instead.</p>
+      </article>
+
+      <article class="option">
+        <h4>Laptop only</h4>
+        <p class="pitch">Cloud API path. Works on any machine with internet.</p>
+        <p class="access">A 750-page corpus costs roughly $8–15 on Claude or GPT, around $3 on Gemini Flash. You supply the API key.</p>
+      </article>
+
+    </div>
+  </details>
+
+  <label>
+    <span class="q">3. What languages or scripts are in the documents?</span>
+    <select name="language" required>
+      <option value="">— pick one —</option>
+      <option value="latin">Latin only (English, European languages)</option>
+      <option value="cjk">CJK (Korean, Chinese, Japanese)</option>
+      <option value="historical">Historical / Fraktur / older orthographies</option>
+      <option value="mixed">Multiple scripts in one corpus</option>
+      <option value="other">Other</option>
+    </select>
+  </label>
+
+  <label>
+    <span class="q">4. What kind of documents?</span>
+    <select name="doctype" required>
+      <option value="">— pick one —</option>
+      <option value="book">Books or book chapters</option>
+      <option value="journal">Journal articles</option>
+      <option value="news">Newspapers or magazines</option>
+      <option value="manuscript">Historical manuscripts or letters</option>
+      <option value="govlegal">Government or legal documents</option>
+      <option value="report">Reports (working papers, white papers, dissertations)</option>
+      <option value="forms">Forms, tables, or structured data</option>
+      <option value="comic">Comics / manga / manhwa</option>
+      <option value="mixed">Mixed types in one corpus</option>
+    </select>
+  </label>
+
+  <label>
+    <span class="q">5. What software will you use? <em>(optional)</em></span>
+    <select name="analysis">
+      <option value="">— pick one —</option>
+      <option value="orange">Orange Data Mining</option>
+      <option value="r">R</option>
+      <option value="python">Python</option>
+      <option value="unsure">Not sure yet</option>
+    </select>
+  </label>
+
+  <label>
+    <span class="q">6. Resource constraints?</span>
+    <select name="constraints" required>
+      <option value="">— pick one —</option>
+      <option value="free_time">No budget; time is flexible</option>
+      <option value="small_budget">Small budget (under $100); moderate timeline</option>
+      <option value="grant">Project grant; flexible timeline</option>
+      <option value="fast">Need it done this week or month</option>
+    </select>
+  </label>
+
+  <button type="submit">Get my starter kit</button>
+</form>
+
+<section id="output" class="hidden" aria-live="polite"></section>
+
+<footer>
+  <p>Read the <a href="skills/corpus-from-pdfs/SKILL.html">framing skill</a>, or browse the <a href="skills/">skills directory</a>. Stuck? <a href="mailto:stevencdenney@gmail.com?subject=corpus%20building%20help">Email Steven</a>.</p>
+</footer>
+
+<script src="wizard.js"></script>
+</body>
+</html>

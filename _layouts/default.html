@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<link rel="stylesheet" href="{{ '/wizard.css' | relative_url }}">
+</head>
+<body class="scenario-page">
+
+<a class="gh-link" href="#" aria-label="View on GitHub">View on GitHub</a>
+
+<header>
+  <p class="breadcrumb"><a href="{{ '/' | relative_url }}">← Corpus Building Wizard</a></p>
+</header>
+
+<article class="scenario">
+{{ content }}
+</article>
+
+<footer>
+  <p><a href="{{ '/' | relative_url }}">← Back to the wizard</a></p>
+</footer>
+
+</body>
+</html>

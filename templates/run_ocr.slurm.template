@@ -1,0 +1,164 @@
+#!/bin/bash
+#SBATCH --job-name={{PROJECT_NAME}}-ocr
+#SBATCH --partition={{PARTITION}}                   # e.g. gpu-short, gpu_lucdh
+#SBATCH --time={{WALL_TIME}}                        # e.g. 04:00:00 (gpu-short max), 14-00:00:00 (gpu_lucdh max)
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=64G
+#SBATCH --gres={{GPU_SPEC}}                         # e.g. gpu:a100:1 for gpu-short; gpu:1 for gpu_lucdh
+#SBATCH --output=logs/ocr_%j.out
+#SBATCH --error=logs/ocr_%j.err
+# If using gpu_lucdh, also uncomment:
+##SBATCH --account=gpu_lucdh
+
+# ============================================================================
+# vLLM-based OCR pipeline — two-phase pattern
+#
+# Phase 1: start vLLM server in background, wait for /health
+# Phase 2: run client script against localhost OpenAI-compatible API
+# Phase 3: shut down server, run CPU-only post-processing stages
+#
+# This template is project-agnostic. Fill in the {{PLACEHOLDERS}} below and
+# adapt the client invocation in "Phase 2" to match your pipeline's script.
+# Placeholder style: {{DOUBLE_BRACES}} — chosen to avoid bash heredoc
+# conflicts (`<<WORD>>` is parsed as a heredoc start).
+#
+# Reference skills:
+#   - alice-vllm-deploy : deployment, cold-start timing, SSH discipline
+#   - corpus-from-pdfs  : end-to-end pipeline framing
+# ============================================================================
+
+set -euo pipefail
+
+# ---- Project paths (edit) --------------------------------------------------
+PIPELINE_DIR="{{PIPELINE_DIR}}"          # e.g. /zfsstore/user/<netid>/<project>/pipeline
+OUTPUT_DIR="{{OUTPUT_DIR}}"              # e.g. /zfsstore/user/<netid>/<project>/ocr_output
+VLLM_VENV="{{VLLM_VENV}}"                # e.g. /zfsstore/user/<netid>/<project>/.venv_vllm
+MODEL="{{MODEL_ID}}"                     # e.g. Qwen/Qwen3.5-35B-A3B-GPTQ-Int4
+QUANTIZATION="{{QUANT_BACKEND}}"         # e.g. gptq_marlin, awq_marlin, or "" for fp
+PORT=8000
+
+# ---- Cluster-offline mode (required on ALICE) ------------------------------
+export HF_HOME="{{HF_HOME}}"             # e.g. /zfsstore/user/<netid>/.hf_cache
+export HF_HUB_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+
+# ---- Job banner ------------------------------------------------------------
+echo "=============================================="
+echo "{{PROJECT_NAME}} OCR via vLLM"
+echo "=============================================="
+echo "Job ID:    ${SLURM_JOB_ID}"
+echo "Node:      ${SLURMD_NODENAME}"
+echo "Partition: ${SLURM_JOB_PARTITION}"
+echo "GPU:       $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+echo "Model:     ${MODEL}"
+echo "Started:   $(date)"
+echo "=============================================="
+
+cd "${PIPELINE_DIR}"
+mkdir -p "${PIPELINE_DIR}/logs" "${OUTPUT_DIR}"
+
+# ---- Verify vLLM venv (do NOT `import vllm` on the login node) -------------
+if [ ! -x "${VLLM_VENV}/bin/python" ]; then
+    echo "ERROR: vLLM venv not found at ${VLLM_VENV}"
+    exit 1
+fi
+# Glob across python3.* to avoid version-pinning the check
+if ! ls "${VLLM_VENV}"/lib/python3.*/site-packages/vllm/__init__.py >/dev/null 2>&1; then
+    echo "ERROR: vLLM not installed in venv at ${VLLM_VENV}"
+    exit 1
+fi
+
+# ============================================================================
+# Phase 1: start vLLM server
+# ============================================================================
+echo ""
+echo "Starting vLLM server on port ${PORT}..."
+
+VLLM_ARGS=(
+    --model "${MODEL}"
+    --dtype bfloat16
+    --max-model-len 16384
+    --host 127.0.0.1
+    --port "${PORT}"
+    --trust-remote-code
+)
+if [ -n "${QUANTIZATION}" ]; then
+    VLLM_ARGS+=(--quantization "${QUANTIZATION}")
+fi
+
+"${VLLM_VENV}/bin/python" -m vllm.entrypoints.openai.api_server "${VLLM_ARGS[@]}" \
+    2>&1 | tee "logs/vllm_server_${SLURM_JOB_ID}.log" &
+
+VLLM_PID=$!
+echo "vLLM PID: ${VLLM_PID}"
+
+# Health check loop — 900s covers the ~13-min cold start from ZFS on A100
+echo "Waiting for vLLM server /health (up to 900s)..."
+for i in $(seq 1 900); do
+    if curl -s "http://127.0.0.1:${PORT}/health" >/dev/null 2>&1; then
+        echo "vLLM server ready after ${i}s"
+        break
+    fi
+    if ! kill -0 "${VLLM_PID}" 2>/dev/null; then
+        echo "ERROR: vLLM server died during startup"
+        tail -50 "logs/vllm_server_${SLURM_JOB_ID}.log"
+        exit 1
+    fi
+    sleep 1
+done
+
+if ! curl -s "http://127.0.0.1:${PORT}/health" >/dev/null 2>&1; then
+    echo "ERROR: vLLM server not ready after 900s"
+    kill "${VLLM_PID}" 2>/dev/null || true
+    exit 1
+fi
+
+# ============================================================================
+# Phase 2: OCR client
+# ============================================================================
+echo ""
+echo "--- Stage 1: VLM OCR ---"
+
+# EDIT THIS BLOCK to invoke your pipeline's client script. The client should
+# use the `openai` Python package against http://127.0.0.1:${PORT}/v1.
+#
+# We disable `set -e` around the client so that a non-zero exit is captured
+# into OCR_EXIT for reporting, not auto-propagated by the shell.
+set +e
+"${VLLM_VENV}/bin/python" {{CLIENT_SCRIPT}} \
+    --manifest {{MANIFEST_PATH}} \
+    --output "${OUTPUT_DIR}" \
+    --api-url "http://127.0.0.1:${PORT}/v1"
+OCR_EXIT=$?
+set -e
+
+# ============================================================================
+# Phase 3: stop server, run CPU-only stages
+# ============================================================================
+echo ""
+echo "Stopping vLLM server..."
+kill "${VLLM_PID}" 2>/dev/null || true
+wait "${VLLM_PID}" 2>/dev/null || true
+
+if [ ${OCR_EXIT} -eq 0 ]; then
+    echo ""
+    echo "--- Stage 2a: Diagnostics ---"
+    "${VLLM_VENV}/bin/python" {{DIAGNOSTICS_SCRIPT}} --input "${OUTPUT_DIR}" --all
+
+    echo ""
+    echo "--- Stage 2b: Rule-based cleanup ---"
+    "${VLLM_VENV}/bin/python" {{RULE_FIXES_SCRIPT}} --input "${OUTPUT_DIR}" --all
+
+    echo ""
+    echo "--- Stage 3: Assembly ---"
+    "${VLLM_VENV}/bin/python" {{ASSEMBLER_SCRIPT}} --input "${OUTPUT_DIR}"
+fi
+
+echo ""
+echo "=============================================="
+echo "Finished: $(date)"
+echo "Exit code: ${OCR_EXIT}"
+echo "Output: ${OUTPUT_DIR}"
+echo "=============================================="
+
+exit ${OCR_EXIT}

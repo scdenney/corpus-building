@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jekyll / GitHub Pages
+_site/
+.jekyll-cache/
+.jekyll-metadata
+Gemfile.lock
+.bundle/
+vendor/
+
+# Node (if local tooling gets added later)
+node_modules/
+
+# Temp / backups
+*.bak
+*.tmp
+*.log

@@ -1,0 +1,134 @@
+"""
+OCR prompts for the VLM pipeline.
+
+Centralizing prompts in a module keeps them version-controlled, auditable,
+and swappable across pipelines. A `PROMPTS` dict maps language or
+document-type keys to prompt strings; a `LANGUAGE_PROMPT_MAP` routes from
+folder/manifest labels to prompt keys; an optional `VALID_TAGS` set lets
+downstream diagnostics validate structured output.
+
+Two reference patterns are shown below — adapt to your corpus type.
+Placeholder style: {{DOUBLE_BRACES}}. IMPORTANT: {{PLACEHOLDERS}} that
+appear inside a prompt string get sent to the VLM verbatim. Replace them
+before running — do not leave them in.
+
+Design notes (see the `corpus-from-pdfs` skill for rationale):
+
+- Be explicit about the document type ("This image is a page from a Korean
+  webtoon", "This is a scanned Polish history textbook from the 1970s").
+- Enumerate expected character sets for non-Latin or diacritic-heavy scripts
+  (GEI lesson: explicit character enumeration in prompts matters enormously).
+- Request structured output (type tags like [DIALOGUE] / [NARRATION] / [SFX];
+  markdown headings for textbooks). Structure during extraction is far cheaper
+  than post-hoc classification.
+- Handle empty pages explicitly — "If no text on page, output only: [NO_TEXT]."
+  Without this, models hallucinate content for blank pages.
+- Include negative instructions — "Do not translate," "do not describe the
+  image," "do not add content not present."
+"""
+
+# ---------------------------------------------------------------------------
+# Prompt registry: add one entry per language / document type.
+# ---------------------------------------------------------------------------
+
+PROMPTS = {
+
+    # -----------------------------------------------------------------------
+    # Pattern A: scanned historical text with explicit character enumeration.
+    #
+    # Replace:
+    #   {{LANG_KEY_A}}           → prompt key used internally (e.g. "polish")
+    #   {{LANGUAGE_NAME}}        → human-readable language (e.g. "Polish")
+    #   {{SCRIPT_DESCRIPTION}}   → enumerated character set, inline.
+    #                              Polish example:
+    #                                "Polish diacritical characters
+    #                                 (ą, ć, ę, ł, ń, ó, ś, ź, ż)"
+    #                              Korean example:
+    #                                "Korean hangul and classical Chinese
+    #                                 characters (hanja / 漢字)"
+    # -----------------------------------------------------------------------
+    "{{LANG_KEY_A}}": (
+        "Extract all text from this document image. "
+        "The text is in {{LANGUAGE_NAME}} and contains "
+        "{{SCRIPT_DESCRIPTION}}. "
+        "Transcribe every character exactly as it appears. "
+        "Output in markdown format preserving headings, paragraphs, "
+        "footnotes, and tables. "
+        "If the page has no text at all, output only: [NO_TEXT]. "
+        "Do not translate or interpret the text."
+    ),
+
+    # -----------------------------------------------------------------------
+    # Pattern B: structured extraction with type tags.
+    #
+    # Replace:
+    #   {{DOCTYPE_KEY_B}}        → prompt key (e.g. "webtoon_korean")
+    #   {{DOCUMENT_TYPE}}        → full description (e.g. "Korean webtoon
+    #                              (manhwa)", "Japanese manga volume")
+    #   {{NAVIGATION_PATTERNS}}  → navigation/UI text to exclude, inline.
+    #                              Naver Webtoon example:
+    #                                "홈, 웹툰, 로그인"
+    #                              Webcomic site example:
+    #                                "Next Episode, Subscribe, Rate"
+    # -----------------------------------------------------------------------
+    "{{DOCTYPE_KEY_B}}": (
+        "This image is a page from a {{DOCUMENT_TYPE}}. "
+        "Extract ALL text visible in the image, reading from top to bottom. "
+        "For each text element, output it on its own line with a type tag:\n"
+        "- [DIALOGUE] for speech bubbles (character dialogue)\n"
+        "- [NARRATION] for narration boxes (rectangular boxes, narrator text)\n"
+        "- [SFX] for sound effects (onomatopoeia, often stylized)\n"
+        "- [TEXT] for other visible text (signs, screens, labels)\n\n"
+        "Rules:\n"
+        "- Transcribe text exactly as written, character by character\n"
+        "- Preserve line breaks within speech bubbles\n"
+        "- Read top-to-bottom following the visual flow of panels\n"
+        "- If the page has no text at all, output only: [NO_TEXT]\n"
+        "- Do NOT include website navigation text "
+        "({{NAVIGATION_PATTERNS}})\n"
+        "- Do NOT describe the artwork or characters\n"
+        "- Do NOT translate any text"
+    ),
+}
+
+# ---------------------------------------------------------------------------
+# Routing: folder/manifest language labels → prompt keys.
+# The inventory/manifest uses friendly labels ("korean", "polish"); this map
+# resolves them to the actual prompt key used above.
+# ---------------------------------------------------------------------------
+
+LANGUAGE_PROMPT_MAP = {
+    "{{MANIFEST_LABEL_A}}": "{{LANG_KEY_A}}",
+    "{{MANIFEST_LABEL_B}}": "{{DOCTYPE_KEY_B}}",
+}
+
+# ---------------------------------------------------------------------------
+# Tag validation (only needed if using Pattern B with structured tags).
+# Downstream diagnostics check that every output line starts with one of
+# these tags; lines that don't are flagged as parser failures.
+# ---------------------------------------------------------------------------
+
+VALID_TAGS = {
+    "DIALOGUE",
+    "NARRATION",
+    "SFX",
+    "TEXT",
+    "NO_TEXT",
+}
+
+
+def get_prompt(language_or_type: str) -> str:
+    """Resolve a manifest label or prompt key to the actual prompt string."""
+    key = LANGUAGE_PROMPT_MAP.get(language_or_type, language_or_type)
+    if key not in PROMPTS:
+        raise KeyError(
+            f"No prompt for '{language_or_type}'. "
+            f"Known: {sorted(PROMPTS.keys())}"
+        )
+    prompt = PROMPTS[key]
+    if "{{" in prompt:
+        raise ValueError(
+            f"Prompt for '{key}' still contains unfilled template "
+            f"placeholders ({{...}}). Replace them before running."
+        )
+    return prompt
