@@ -6,7 +6,7 @@
 &nbsp;
 [![Live wizard](https://img.shields.io/badge/Live-wizard-5ecbc0.svg)](https://scdenney.github.io/corpus-building/)
 &nbsp;
-[![Companion to thesis-supervision](https://img.shields.io/badge/companion_to-thesis--supervision-8aa8a6.svg)](https://scdenney.github.io/thesis-supervision/)
+[![Companion to supervision site](https://img.shields.io/badge/companion_to-supervision--site-8aa8a6.svg)](https://scdenney.github.io/thesis-supervision/)
 
 > **Live wizard:** <https://scdenney.github.io/corpus-building/>
 
@@ -43,13 +43,13 @@ flowchart LR
 
 **See what it produces.** Read a worked scenario at student scale (~75 documents):
 
-- [Small corpus via cloud API](examples/small_api.md) — journal articles, laptop only, ~$10
-- [Small corpus via ALICE HPC](examples/small_alice.md) — Polish newspapers, free compute
+- [Small corpus via cloud API](examples/small_api.md) — Korean newspaper editorials, laptop only, ~$10
+- [Small corpus via ALICE HPC](examples/small_alice.md) — historical Korean newspapers, free compute
 - [Small corpus on a local GPU](examples/small_local_gpu.md) — RTX 3060, no cloud cost
 
 **Build your own.** Take the [wizard](https://scdenney.github.io/corpus-building/). Six questions in, you have a starter kit: which skills to read, which templates to copy, and a one-line terminal command that launches Claude Code or Codex already primed with your specifics.
 
-**Use the skills in Claude Code directly.** Each skill in `skills/` has YAML frontmatter with trigger phrases; Claude Code auto-detects them. Install project-level (`cp -r skills/corpus-from-pdfs /your/project/.claude/skills/`) or user-level (`cp -r skills/* ~/.claude/skills/`). Call one explicitly with `/corpus-from-pdfs I have 75 English journal articles...`.
+**Use the skills in Claude Code directly.** Each skill in `skills/` has YAML frontmatter with trigger phrases; Claude Code auto-detects them. Install project-level (`cp -r skills/corpus-from-pdfs /your/project/.claude/skills/`) or user-level (`cp -r skills/* ~/.claude/skills/`). Call one explicitly with `/corpus-from-pdfs I have 75 Korean newspaper editorials...`.
 
 ---
 
@@ -100,7 +100,7 @@ Codex-specific practitioner writing is thin in early 2026 — most named voices 
 
 ## Context
 
-This repo is the computational-methods deep dive that pairs with the corpus-building primer on [*Thesis Supervision*](https://scdenney.github.io/thesis-supervision/methods/building-a-corpus). Students who need a conceptual introduction start there; students whose projects require LLM-based OCR, programmatic pipelines, HPC deployment, or non-PDF source handling continue here.
+This repo is the computational-methods deep dive that pairs with the corpus-building primer on [*Thesis & Research Supervision*](https://scdenney.github.io/thesis-supervision/methods/building-a-corpus). Students who need a conceptual introduction start there; students whose projects require LLM-based OCR, programmatic pipelines, HPC deployment, or non-PDF source handling continue here.
 
 The repo is deliberately **standalone** so it can evolve independently — skills, templates, and the wizard mature on their own cadence; the supervision site links in rather than duplicating content.
 

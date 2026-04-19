@@ -4,7 +4,7 @@ title: "Embed snippets"
 
 # Embed snippets
 
-Two copy-paste blocks for linking from the thesis-supervision site (or anywhere else) into the corpus-building wizard.
+Two copy-paste blocks for linking from the Thesis & Research Supervision site (or anywhere else) into the corpus-building wizard.
 
 Both snippets are self-contained HTML + CSS — no JavaScript, no build step, no external dependencies. Drop them anywhere a raw HTML block renders (including most Jekyll / Hugo / plain-HTML pages).
 
@@ -31,4 +31,4 @@ The snippet now wraps the anchor in a block-level container so it remains safe w
 
 ## Styling notes
 
-Both snippets use a scoped class prefix (`cb-`) to avoid conflicts with host-site CSS. The refreshed defaults lean toward the thesis-supervision palette so the cross-site handoff reads as one project family, but the core tokens still live at the top of each block's style if you want to retune them for another host site.
+Both snippets use a scoped class prefix (`cb-`) to avoid conflicts with host-site CSS. The refreshed defaults lean toward the Thesis & Research Supervision palette so the cross-site handoff reads as one project family, but the core tokens still live at the top of each block's style if you want to retune them for another host site.

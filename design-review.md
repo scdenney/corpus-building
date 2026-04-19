@@ -1,4 +1,4 @@
-# Design Review: Thesis Supervision + Corpus Building Wizard
+# Design Review: Thesis & Research Supervision + Corpus Building Wizard
 
 Reviewed on 2026-04-19 against the requested source files, the live builds at `scdenney.github.io`, and the teaching-site interaction style at `https://scdenney.github.io/teaching/`.
 
