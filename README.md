@@ -128,6 +128,29 @@ corpus-building/
 
 ---
 
+## New to Claude Code or Codex?
+
+The starter kit will tell you which skills to read and which commands to run, but the surrounding workflow — structuring the project, writing a `CLAUDE.md` or `AGENTS.md`, managing what the agent knows and remembers — is its own skill. Rather than duplicate that material here, these are the best sources to start with.
+
+**Official docs**
+
+- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices) — Anthropic Engineering's canonical guide: `CLAUDE.md` conventions, `.claude/commands/` for reusable slash commands, and the plan → small-diff → tests → review loop.
+- [Claude Code: Memory](https://code.claude.com/docs/en/memory) — the full `CLAUDE.md` hierarchy (user / project / subdirectory / local) and auto-memory.
+- [Claude Code: Settings](https://code.claude.com/docs/en/settings) — `.claude/settings.json`, permissions (allow / deny / ask), hooks, precedence rules.
+- [Custom Instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md) — Codex's counterpart to `CLAUDE.md`.
+- [Codex CLI Quickstart](https://developers.openai.com/codex/quickstart) — installation, auth, the three approval modes.
+- [Skill Authoring Best Practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) — when to write a skill vs. a direct prompt; directly relevant if you adapt the skills in this repo.
+
+**Practitioner voices**
+
+- [Agentic Engineering Patterns](https://simonwillison.net/guides/agentic-engineering-patterns/) — Simon Willison's living tool-agnostic guide to working with Claude Code and Codex.
+- [Mitchell Hashimoto's New Way of Writing Code](https://newsletter.pragmaticengineer.com/p/mitchell-hashimoto) — the "always have an agent doing something" workflow and the test-harness pattern (turn every agent mistake into a rule in `CLAUDE.md`).
+- [How to Build a Coding Agent](https://ghuntley.com/agent/) — Geoffrey Huntley's workshop; demystifies what an agent actually is (a loop + tools + LLM) and why pitfalls like context bloat and drift happen.
+
+Codex-specific practitioner writing is thin in early 2026 — most named voices focus on Claude Code. Both tools work for this repo's skills and commands.
+
+---
+
 ## Using the scripts standalone
 
 The scripts work independently of Claude Code. Minimal pipeline:
