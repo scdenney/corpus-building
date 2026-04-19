@@ -114,9 +114,9 @@ Send to Steven when:
 
 The wizard renders six sections — see `STARTER_KIT.md` for the full spec:
 
-1. **Header** — recommended path, corpus scale, cost, time estimate
-2. **Read first** — 2–3 skills in numbered order
-3. **Paste into Claude Code / Codex** — agent-ready prompt prefilled from answers
-4. **Launch command** — one-line terminal invocation (`claude "..."` or `codex "..."`) to copy-paste
-5. **Files to copy + commands** — templates to grab and the shell sequence to run
-6. **Escalation** — `mailto:` button, always present, highlighted when an escalation trigger fired
+1. **Header**: recommended path, corpus scale, cost, time estimate
+2. **Read first**: 2–3 skills in numbered order
+3. **Paste into Claude Code / Codex**: agent-ready prompt prefilled from answers
+4. **Launch command**: one-line terminal invocation (`claude "..."` or `codex "..."`) to copy-paste
+5. **Files to copy + commands**: templates to grab and the shell sequence to run
+6. **Escalation**: `mailto:` button, always present, highlighted when an escalation trigger fired

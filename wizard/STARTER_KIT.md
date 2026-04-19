@@ -67,7 +67,7 @@ Three canonical routing outcomes at student scale (~75 articles). These are the 
 
 ---
 
-### Example A — Small-scale API (default student case)
+### Example A: Small-scale API (default student case)
 
 **Wizard answers**
 - Pages: 750 (75 articles × ~10 pages)
@@ -108,7 +108,7 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
 
 ---
 
-### Example B — Small-scale ALICE (HPC path, same scale)
+### Example B: Small-scale ALICE (HPC path, same scale)
 
 **Wizard answers**
 - Pages: 800 (75 historical newspapers × ~10 pages)
@@ -154,7 +154,7 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
 
 ---
 
-### Example C — Small-scale local GPU
+### Example C: Small-scale local GPU
 
 **Wizard answers**
 - Pages: 750

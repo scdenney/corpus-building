@@ -68,7 +68,7 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
 
 > **Note:** runs on any machine with a 8 GB+ CUDA GPU. At ~8 s/page for an 8B model on a 12 GB consumer card, budget roughly 100 minutes for 750 pages.
 
-### Step 1 — Inventory (local)
+### Step 1: Inventory (local)
 
 ```bash
 python3 scripts/inventory_builder.py --pdf-dir ./reports --output manifest.csv
@@ -81,7 +81,7 @@ Manifest: manifest.csv
   Total pages:    748
 ```
 
-### Step 2 — Fill `prompts.py`
+### Step 2: Fill `prompts.py`
 
 Pattern A, English. No character enumeration needed — English has no tricky diacritics.
 
@@ -99,7 +99,7 @@ PROMPTS = {
 LANGUAGE_PROMPT_MAP = {"english": "english"}
 ```
 
-### Step 3 — Build the HF Transformers client (inside Claude Code)
+### Step 3: Build the HF Transformers client (inside Claude Code)
 
 The student pastes the wizard's prompt. Claude Code reads `hf-transformers-ocr` and helps write a ~100-line `hf_ocr.py` script. Key patterns the agent applies from the skill:
 
@@ -129,7 +129,7 @@ def ocr_page(model, processor, image_path, prompt, max_new_tokens=8192):
     return processor.batch_decode(trimmed, skip_special_tokens=True)[0].strip()
 ```
 
-### Step 4 — Run
+### Step 4: Run
 
 ```bash
 python3 hf_ocr.py --manifest manifest.csv --output ocr_output/
@@ -148,7 +148,7 @@ Processing aggr_committee_2019_002.pdf (9 pages)...
 
 ~8 s/page × 748 pages ≈ **100 min**. Laptop can sleep during this; the run continues. If the student closes their terminal, they lose the run unless they used `tmux` or `nohup` — Claude Code will have suggested one of those.
 
-### Step 5 — Assemble
+### Step 5: Assemble
 
 ```bash
 python3 scripts/corpus_assembler.py \
@@ -164,7 +164,7 @@ python3 scripts/corpus_assembler.py \
   Text density:   99.6%
 ```
 
-### Step 6 — Analyze
+### Step 6: Analyze
 
 ```python
 import pandas as pd

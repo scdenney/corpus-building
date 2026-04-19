@@ -50,8 +50,8 @@ model = model.eval()
 - **Match model size to VRAM.** Consumer GPUs are the common case — not everyone has an A100. At 4-bit quantization: an 8B VLM (Qwen3-VL-8B-Instruct, MiniCPM-V 2.6) fits on 8–12 GB cards with headroom for KV cache. A 13B-class model needs 16 GB+ (RTX 4070 Ti Super, 4080). A 32B dense model needs 24 GB+ (RTX 4090, A6000). Only reach for 32B if accuracy actually demands it.
 - **BitsAndBytes NF4 (4-bit):** Best for dense models (Qwen3-VL-8B, Qwen3-VL-32B, InternVL2.5, MiniCPM-V). Reduces VRAM by ~4x. Accuracy loss is ~2-5% on OCR tasks. Requires `bitsandbytes` package.
 - **GPTQ (4-bit, pre-quantized):** Best for MoE models where BnB fails. Requires GPTQ-specific model weights from HuggingFace (e.g., `Qwen/Qwen3.5-35B-A3B-GPTQ-Int4`). Works with vLLM's `gptq_marlin` backend but may have compilation issues with direct transformers loading.
-- **No quantization (full precision):** Requires 2-4x more VRAM (32B model needs ~64GB). Use only when accuracy is critical and you have the hardware (2x A100, or A100 80GB for 32B models).
-- **Critical: BnB NF4 + MoE = broken.** BitsAndBytes 4-bit quantization is incompatible with Mixture-of-Experts models on transformers v5 (bitsandbytes issue #1849). This includes Qwen3.5-35B-A3B and similar MoE architectures. Use GPTQ via vLLM instead.
+- **No quantization (full precision):** Requires 2-4x more VRAM (32B model needs ~64GB). Use only when accuracy matters more than speed and you have the hardware (2x A100, or A100 80GB for 32B models).
+- **Known-bad combination: BnB NF4 + MoE.** BitsAndBytes 4-bit quantization is incompatible with Mixture-of-Experts models on transformers v5 (bitsandbytes issue #1849). This includes Qwen3.5-35B-A3B and similar MoE architectures. Use GPTQ via vLLM instead.
 
 ### 4. Inference Pattern
 

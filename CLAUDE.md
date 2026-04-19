@@ -6,11 +6,11 @@ Standalone skills, scripts, and teaching materials for building text corpora fro
 
 A set of **Claude Code skills** and **companion shell scripts** that walk students and researchers through the process of building a text corpus from PDF documents using vision-language models. The skills are designed to be:
 
-1. **Standalone** — each skill works independently as a `.md` file or shell script
-2. **Teaching-oriented** — walks users through decisions, not just executes steps
-3. **Modular** — mix and match for different corpus types (scanned books, comics, newspapers, etc.)
-4. **HPC-ready** — knows how to work with SLURM, vLLM, and GPU scheduling
-5. **Installable** — follows the open-science-skills plugin format for Claude Code integration
+1. **Standalone**: each skill works independently as a `.md` file or shell script
+2. **Teaching-oriented**: walks users through decisions, not just executes steps
+3. **Modular**: mix and match for different corpus types (scanned books, comics, newspapers, etc.)
+4. **HPC-ready**: knows how to work with SLURM, vLLM, and GPU scheduling
+5. **Installable**: follows the open-science-skills plugin format for Claude Code integration
 
 ## Lessons Driving This
 
@@ -23,17 +23,17 @@ A set of **Claude Code skills** and **companion shell scripts** that walk studen
 - **Cold start from ZFS takes ~13 minutes** on A100: Python imports (4 min) → config (2 min) → weight loading (2.5 min) → torch.compile (2.5 min) → warmup (1.5 min) → CUDA graph capture (10s). Subsequent runs faster due to cached compilation.
 
 ### From Webtoon Thesis (`/Thesis/`)
-- **Comic OCR needs type classification** — dialogue, narration, SFX are linguistically distinct. VLM can classify during extraction with tag-based prompts.
-- **Naver UI detection** — page 0 of Korean webtoon PDFs has selectable nav text; auto-detect and skip via PyMuPDF.
-- **macOS NFD normalization** — Korean filenames decompose on HFS+/APFS; must NFC-normalize before regex matching.
-- **Manifest-driven pipelines** — a CSV manifest is the single source of truth linking PDFs to metadata. Generate ALICE-path variants for deployment.
-- **Orange Data Mining compatibility** — CSV must be tidy, small, text-only rows. Split columns (dialogue/narration/sfx) plus combined text column gives researchers both filtered and full-text options.
+- **Comic OCR needs type classification**: dialogue, narration, SFX are linguistically distinct. VLM can classify during extraction with tag-based prompts.
+- **Naver UI detection**: page 0 of Korean webtoon PDFs has selectable nav text; auto-detect and skip via PyMuPDF.
+- **macOS NFD normalization**: Korean filenames decompose on HFS+/APFS; must NFC-normalize before regex matching.
+- **Manifest-driven pipelines**: a CSV manifest is the single source of truth linking PDFs to metadata. Generate ALICE-path variants for deployment.
+- **Orange Data Mining compatibility**: CSV must be tidy, small, text-only rows. Split columns (dialogue/narration/sfx) plus combined text column gives researchers both filtered and full-text options.
 
 ### From open-science-skills (`/resources/open-science-skills/`)
 - **Skill format**: YAML frontmatter (name, description with trigger phrases, argument-hint) + procedural markdown body + quality checklist
 - **Trigger-rich descriptions**: enumerate 4-8 "use when" scenarios for auto-invocation
 - **Progressive disclosure**: instructions in skill, bibliography in SOURCES.md
-- **Existing OCR skills**: `vlm-ocr-pipeline` (model selection, batch strategy, accuracy eval) and `post-ocr-cleanup` (LLM correction, rule fixes, diagnostics) already exist — new skills complement these, not duplicate
+- **Existing OCR skills**: `vlm-ocr-pipeline` (model selection, batch strategy, accuracy eval) and `post-ocr-cleanup` (LLM correction, rule fixes, diagnostics) already exist. The new skills complement these rather than duplicate them.
 
 ## Planned Skills
 

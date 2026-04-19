@@ -66,7 +66,7 @@ python3 scripts/corpus_assembler.py --parse-tags --ocr-dir ocr_output --manifest
 
 ## Walkthrough
 
-### Step 1 — Inventory
+### Step 1: Inventory
 
 ```bash
 python3 scripts/inventory_builder.py --pdf-dir ./editorials --output manifest.csv
@@ -91,7 +91,7 @@ hani_2016_014,hani_2016_014.pdf,/Users/you/editorials/hani_2016_014.pdf,editoria
 joongang_2017_008,joongang_2017_008.pdf,/Users/you/editorials/joongang_2017_008.pdf,editorials,11,0,10
 ```
 
-### Step 2 — Cost check
+### Step 2: Cost check
 
 ```bash
 python3 scripts/cost_estimator.py --pages 748 --compare
@@ -110,7 +110,7 @@ Estimated total cost (USD):
 
 Under $15 on Claude, under $4 on Gemini. The student picks Claude for output quality on dense Korean newspaper pages and multi-column layouts.
 
-### Step 3 — OCR (inside Claude Code)
+### Step 3: OCR (inside Claude Code)
 
 The student pastes the wizard's prompt into Claude Code. The agent:
 
@@ -139,7 +139,7 @@ A single page's result looks like:
 
 After ~2.5 hours, all 75 editorial PDFs are done. If anything crashed, re-running the client resumes from where it left off.
 
-### Step 4 — Assemble
+### Step 4: Assemble
 
 ```bash
 python3 scripts/corpus_assembler.py --parse-tags \
@@ -170,7 +170,7 @@ chosun_2016_001,1,"중국의 반발과 국내 정치의 대응은 ...",chosun_20
 hani_2016_014,0,"정부 발표 이후 언론의 평가가 엇갈렸다 ...",hani_2016_014.pdf,editorials
 ```
 
-### Step 5 — Analyze
+### Step 5: Analyze
 
 ```python
 import pandas as pd

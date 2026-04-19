@@ -73,7 +73,7 @@ python3 scripts/corpus_assembler.py --parse-tags --ocr-dir ocr_output --manifest
 
 > **Note:** the commands below cannot be executed without an ALICE account and PDFs. The outputs shown are what a student would actually see.
 
-### Step 1 — Inventory (local)
+### Step 1: Inventory (local)
 
 Same as the API scenario. Runs on the student's laptop.
 
@@ -88,7 +88,7 @@ Manifest: manifest.csv
   Total pages:    798
 ```
 
-### Step 2 — Fill `prompts.py`
+### Step 2: Fill `prompts.py`
 
 Inside Claude Code, the student opens `prompts.py` (copied from the template) and fills Pattern B for Korean newspaper pages:
 
@@ -108,7 +108,7 @@ LANGUAGE_PROMPT_MAP = {"korean_news": "korean_news"}
 
 Claude Code reviews this against the `corpus-from-pdfs` guidance on tagged newspaper extraction and confirms it's ready. `VALID_TAGS` is enabled because the student wants clean separation between headlines, body text, captions, and notes.
 
-### Step 3 — Fill `run_ocr.slurm`
+### Step 3: Fill `run_ocr.slurm`
 
 From the template, with the student's values substituted:
 
@@ -122,7 +122,7 @@ From the template, with the student's values substituted:
 - `{{QUANT_BACKEND}}` → `gptq_marlin`
 - Client / diagnostics / assembler script placeholders → filenames from the pipeline
 
-### Step 4 — Deploy
+### Step 4: Deploy
 
 ```bash
 bash scripts/alice_deploy.sh \
@@ -156,14 +156,14 @@ Data:        ./newspapers  →  alice3:/zfsstore/user/<netid>/korean-news/data
 
 The student checks `manifest_alice.csv` — every `pdf_path` now starts with `/zfsstore/user/<netid>/korean-news/data/`.
 
-### Step 5 — Submit the job
+### Step 5: Submit the job
 
 ```bash
 ssh alice3 "cd /zfsstore/user/<netid>/korean-news/pipeline && sbatch run_ocr.slurm"
 # Submitted batch job 2847193
 ```
 
-Then — following the `alice-vllm-deploy` skill's SSH discipline — they consolidate checks into single commands, polling at 2-3 minute intervals:
+Then, following the `alice-vllm-deploy` skill's SSH discipline, they consolidate checks into single commands, polling at 2-3 minute intervals:
 
 ```bash
 ssh alice3 "squeue -j 2847193 -o '%.8T %.10M'; tail -20 logs/ocr_2847193.out"
@@ -200,7 +200,7 @@ vLLM server ready after 784s
 
 Total job runtime: ~13 min cold start + ~90 min OCR + ~10 min CPU stages ≈ 1h 53m.
 
-### Step 6 — Pull results and assemble (local)
+### Step 6: Pull results and assemble (local)
 
 ```bash
 rsync -avz alice3:/zfsstore/user/<netid>/korean-news/ocr_output/ ./ocr_output/
@@ -217,7 +217,7 @@ python3 scripts/corpus_assembler.py --parse-tags \
   Text density:   99.1%
 ```
 
-### Step 7 — Analyze in Python
+### Step 7: Analyze in Python
 
 ```python
 import pandas as pd

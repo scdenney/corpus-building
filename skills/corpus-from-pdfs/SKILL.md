@@ -56,7 +56,7 @@ Four approaches are available, each with different tradeoffs:
 
 ### 3. Design Your Prompts
 
-- **Prompts are the most important technical decision.** The same model with different prompts produces dramatically different output. Invest time here.
+- **Prompt wording matters more than model choice for output quality.** The same prompt on different models produces similar output; the same model on different prompts does not. Invest time here.
 - **Be explicit about the document type.** "This is a page from a Korean webtoon" or "This is a scanned Polish history textbook from the 1970s" gives the VLM critical context for interpreting the image.
 - **Enumerate expected character sets.** For Polish, list every diacritic (ą, ć, ę, ł, ń, ó, ś, ź, ż). For Korean, mention both hangul and hanja. For mixed-script documents, specify which scripts to expect.
 - **Request structured output.** Tags like `[DIALOGUE]`, `[NARRATION]`, `[SFX]` for comics; markdown with headings and tables for textbooks. Structure during extraction is far cheaper than post-hoc classification.
@@ -77,7 +77,7 @@ Four approaches are available, each with different tradeoffs:
 
 - **Follow the multi-stage pattern.** Stage 0: Inventory → Stage 1: OCR → Stage 2: Diagnostics + Cleanup → Stage 3: Assembly → Stage 4: Verification. Each stage reads the previous stage's output and produces structured JSON. This separation allows re-running individual stages without re-processing everything.
 - **Make the pipeline resumable.** Check for existing output before processing each document. A simple file-existence check (`results_raw.json` present → skip) enables restarting after failures without re-processing completed work.
-- **Use the tranche/gate pattern for bulk runs.** Process a test batch (3-5 documents per language), manually evaluate quality, then proceed to bulk. This is the single most important resource management decision — it prevents wasting hours of GPU time on a broken prompt or misconfigured pipeline.
+- **Use the tranche/gate pattern for bulk runs.** Process a test batch (3-5 documents per language), manually evaluate quality, then proceed to bulk. This prevents wasting hours of GPU time on a broken prompt or misconfigured pipeline.
 - **Apply rule-based cleanup unconditionally.** Unicode normalization (NFKC), control character removal, whitespace normalization, and repetition collapse are safe, deterministic, and fast. Run these on every corpus.
 - **LLM-based cleanup is optional and language-dependent.** Pilot-test per language before committing. Some languages see CER improvement; others see degradation. See the `post-ocr-cleanup` skill for methodology.
 

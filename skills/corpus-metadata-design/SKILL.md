@@ -16,7 +16,7 @@ argument-hint: "[describe your analysis goals, languages, and target analysis to
 
 ### 2. Choose Granularity
 
-- **One row per page is the safest default.** It preserves page references (critical for context lookup in the original PDF), keeps rows at a manageable text length, and works across all analysis tools. This is the recommended starting point for any new corpus.
+- **One row per page is the safest default.** It preserves page references for context lookup, keeps rows at a manageable length, and works across all analysis tools. This is the recommended starting point for any new corpus.
 - **One row per document (chapter, article, book) when:** The analysis aggregates across pages (topic modeling, document classification), individual pages have too little text to analyze meaningfully (comics with 1-2 speech bubbles per page), or the researcher explicitly needs document-level units.
 - **One row per sentence or paragraph when:** The analysis requires fine-grained units (sentiment analysis, named entity extraction, syntactic analysis). Requires reliable sentence segmentation, which is language-dependent and error-prone on OCR output. Avoid for Korean without a dedicated tokenizer.
 - **Never mix granularities in one CSV.** If both page-level and document-level views are needed, produce two separate files. Mixing causes confusion and breaks analysis tools that assume uniform rows.
@@ -61,7 +61,7 @@ Add based on analysis needs:
 ### 5. The "Both-And" Column Strategy
 
 - **Provide a combined `text` column AND split columns.** The `text` column (all content joined, tags stripped) serves full-text search, word clouds, and topic models. Split columns (`dialogue`, `narration`, `sfx`) serve targeted linguistic analysis. The `text_tagged` column preserves the raw VLM output for re-processing.
-- **This is not redundancy — it's usability.** Students working in Orange Data Mining need a single text column for the word cloud widget. Researchers doing verb-ending analysis need only the dialogue column. Preserving the tagged output enables future re-parsing without re-running OCR.
+- **The two column sets serve different uses.** Students working in Orange Data Mining need a single text column for the word cloud widget. Researchers doing verb-ending analysis need only the dialogue column. Preserving the tagged output enables future re-parsing without re-running OCR.
 
 ### 6. CSV Design for Orange Data Mining
 

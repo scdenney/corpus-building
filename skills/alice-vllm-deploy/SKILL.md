@@ -18,7 +18,7 @@ argument-hint: "[describe your model, cluster, and what you need to deploy]"
 
 ### 2. The Two-Phase vLLM SLURM Pattern
 
-The proven pattern from the GEI textbooks and Webtoon projects:
+The pattern used in the GEI textbooks and Webtoon projects:
 
 ```
 Phase 1: Start vLLM server in background
@@ -74,12 +74,12 @@ Observed on gpu-short A100 (April 2026):
 
 ### 6. Troubleshooting
 
-- **"ERROR: vLLM server not ready after Ns"** — Increase the timeout in `run_ocr.slurm`. Cold starts from ZFS take ~13 minutes. Set to 900s minimum.
-- **GPU shows 0 MiB for several minutes** — Normal during Python import and weight loading phases. The process is in disk I/O (state `D`). Verify the process is alive: `ps -p <PID> -o state,rss,etime`.
-- **Empty log file for 10+ minutes** — Python stdout buffering. The server is working. Check GPU memory instead.
-- **"ModuleNotFoundError: No module named 'fitz'"** — Install PyMuPDF into the vLLM venv: `<venv>/bin/python -m pip install PyMuPDF`.
-- **BitsAndBytes + MoE incompatibility** — Do not use BnB NF4 quantization with MoE models (Qwen3.5-35B-A3B). Use vLLM with `--quantization gptq_marlin` and GPTQ-Int4 pre-quantized weights instead.
-- **Job completes but no OCR output** — Check if the vLLM server timed out before the client could connect. Increase health check timeout. Check `logs/vllm_server_<JOBID>.log` for server-side errors.
+- **"ERROR: vLLM server not ready after Ns"**: Increase the timeout in `run_ocr.slurm`. Cold starts from ZFS take ~13 minutes. Set to 900s minimum.
+- **GPU shows 0 MiB for several minutes**: Normal during Python import and weight loading phases. The process is in disk I/O (state `D`). Verify the process is alive: `ps -p <PID> -o state,rss,etime`.
+- **Empty log file for 10+ minutes**: Python stdout buffering. The server is working. Check GPU memory instead.
+- **"ModuleNotFoundError: No module named 'fitz'"**: Install PyMuPDF into the vLLM venv: `<venv>/bin/python -m pip install PyMuPDF`.
+- **BitsAndBytes + MoE incompatibility**: Do not use BnB NF4 quantization with MoE models (Qwen3.5-35B-A3B). Use vLLM with `--quantization gptq_marlin` and GPTQ-Int4 pre-quantized weights instead.
+- **Job completes but no OCR output**: Check if the vLLM server timed out before the client could connect. Increase health check timeout. Check `logs/vllm_server_<JOBID>.log` for server-side errors.
 
 ## Quality Checks
 
