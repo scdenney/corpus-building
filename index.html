@@ -28,9 +28,9 @@
   <details class="more-info">
     <summary>Before you start: assumptions and useful links</summary>
     <div class="more-info-body">
-      <p>This is the <strong>computational path</strong> for corpus building — not a beginner's introduction. It assumes you've already thought about what corpus you want and why. Works on PDFs and on other source formats (DOCX, HTML, ePub, XML, plain text) via the <a href="skills/source-file-extraction/SKILL.html">source-file-extraction skill</a>.</p>
-      <p>For the conceptual primer — what a corpus is, planning, selection criteria, ethics, organising files — read <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> on <a href="https://scdenney.github.io/thesis-supervision/">Thesis &amp; Research Supervision</a>.</p>
-      <p>New to Claude Code or Codex? The <a href="https://github.com/scdenney/corpus-building#new-to-claude-code-or-codex">README</a> has a curated resource list — Anthropic and OpenAI docs plus practitioner guides.</p>
+      <p>This is the <strong>computational path</strong> for corpus building, not a beginner's introduction. It assumes you've already thought about what corpus you want and why. Works on PDFs and on other source formats (DOCX, HTML, ePub, XML, plain text) via the <a href="skills/source-file-extraction/SKILL.html">source-file-extraction skill</a>.</p>
+      <p>For the conceptual primer (what a corpus is, planning, selection criteria, ethics, organising files), read <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> on <a href="https://scdenney.github.io/thesis-supervision/">Thesis &amp; Research Supervision</a>.</p>
+      <p>New to Claude Code or Codex? The <a href="https://github.com/scdenney/corpus-building#new-to-claude-code-or-codex">README</a> has a curated resource list: Anthropic and OpenAI docs plus practitioner guides.</p>
     </div>
   </details>
 </header>
@@ -81,14 +81,14 @@
         <article class="option">
           <h4>ALICE</h4>
           <p class="pitch">Leiden's HPC cluster. A40 (48 GB) and A100 (80 GB) GPUs, free for students and staff with a research case.</p>
-          <p class="access">Request an account through Leiden IT — approval takes a few days. <a href="https://pubappslu.atlassian.net/wiki/spaces/HPCWIKI" target="_blank" rel="noopener">ALICE wiki →</a></p>
+          <p class="access">Request an account through Leiden IT; approval takes a few days. <a href="https://pubappslu.atlassian.net/wiki/spaces/HPCWIKI" target="_blank" rel="noopener">ALICE wiki →</a></p>
         </article>
 
         <article class="option">
           <h4>LUCDH Digital Lab</h4>
           <p class="pitch">Walk-in workstations in the Huizinga building (room 0.09). Two graphically-capable desktops for local GPU work, plus specialty kit like Transkribus imaging and VR.</p>
           <p class="access">Open 10–17 during semesters, no reservation needed for the general space. Email <a href="mailto:digital-lab@hum.leidenuniv.nl">digital-lab@hum.leidenuniv.nl</a> for specialty equipment. <a href="https://www.universiteitleiden.nl/en/humanities/centre-for-digital-humanities/digital-lab" target="_blank" rel="noopener">Digital Lab page →</a></p>
-          <p class="caveat">Local files aren't retained between sessions — use external or cloud storage.</p>
+          <p class="caveat">Local files aren't retained between sessions; use external or cloud storage.</p>
         </article>
 
         <article class="option">
@@ -99,7 +99,7 @@
 
         <article class="option">
           <h4>Different SLURM cluster</h4>
-          <p class="pitch">Non-Leiden HPC — your host institution or a national cluster.</p>
+          <p class="pitch">Non-Leiden HPC: your host institution or a national cluster.</p>
           <p class="access">The <code>alice-vllm-deploy</code> skill covers the patterns; most port cleanly with minor edits to partition names and module loads.</p>
         </article>
 
@@ -107,8 +107,8 @@
           <h4>Local GPU</h4>
           <p class="pitch">A home machine with an NVIDIA GPU. Two realistic examples for student-scale OCR:</p>
           <ul class="examples">
-            <li><strong>Running on 8 GB</strong> (RTX 4060, RTX 4060 Ti 8 GB) — Qwen3-VL-8B at 4-bit is tight but workable; drop the input resolution a little to stay comfortable. Expect ~10 s/page.</li>
-            <li><strong>Running on 8–12 GB</strong> (RTX 3060 12 GB, RTX 4070) — Qwen3-VL-8B fits with room to breathe. ~8 s/page.</li>
+            <li><strong>Running on 8 GB</strong> (RTX 4060, RTX 4060 Ti 8 GB): Qwen3-VL-8B at 4-bit is tight but workable; drop the input resolution a little to stay comfortable. Expect ~10 s/page.</li>
+            <li><strong>Running on 8–12 GB</strong> (RTX 3060 12 GB, RTX 4070): Qwen3-VL-8B fits with room to breathe. ~8 s/page.</li>
           </ul>
           <p class="access">Check yours with <code>nvidia-smi</code>. 16 GB+ (RTX 4070 Ti Super, 4080) steps you up to a 13B model; 24 GB+ (RTX 4090) runs a 32B. Under 8 GB, take the API path instead.</p>
         </article>
