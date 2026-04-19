@@ -27,8 +27,8 @@ Accepted URL parameters (all optional):
 
 A dark terminal-window block with a typed command and blinking cursor. Clicking anywhere on the block opens the wizard. Good for the Methods > Computational & quantitative approaches landing page.
 
-Respects `prefers-reduced-motion` — the typing animation disables for users who've opted out.
+The snippet now wraps the anchor in a block-level container so it remains safe when pasted into Jekyll Markdown. Respects `prefers-reduced-motion` — the typing animation disables for users who've opted out.
 
 ## Styling notes
 
-Both snippets use a scoped class prefix (`cb-`) to avoid conflicts with host-site CSS. Core tokens (accent colour, fonts) are declared as CSS custom properties at the top of each block's style — tweak them to match a host site's palette if needed.
+Both snippets use a scoped class prefix (`cb-`) to avoid conflicts with host-site CSS. The refreshed defaults lean toward the thesis-supervision palette so the cross-site handoff reads as one project family, but the core tokens still live at the top of each block's style if you want to retune them for another host site.

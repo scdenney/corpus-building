@@ -13,35 +13,53 @@
   --callout-bg: #f1ede1;
   --escalate: #a3462a;
   --escalate-bg: #fbf1e9;
+  --supervision-plum: #2c3527;
+  --supervision-gold: #f4a731;
+  --surface-shadow: 0 18px 38px rgba(13, 36, 36, 0.08);
+  --radius: 16px;
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-padding-top: 1rem; }
+html {
+  scroll-padding-top: 1rem;
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--fg);
   background: var(--bg);
-  max-width: 740px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  padding: 1.25rem 1.25rem 4rem;
   line-height: 1.55;
 }
 
 /* Typography -------------------------------------------------------------- */
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 h1 {
   font-family: Georgia, "Iowan Old Style", "Apple Garamond", serif;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: clamp(2rem, 5vw, 3.2rem);
   letter-spacing: -0.01em;
   margin: 0 0 0.25rem;
+  line-height: 0.95;
 }
 .lede {
   color: var(--fg);
-  margin: 0.35rem 0 0.4rem;
-  font-size: 1.0rem;
-  line-height: 1.6;
+  margin: 0.55rem 0 0.55rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.18rem);
+  line-height: 1.65;
+  max-width: 42rem;
 }
 .lede strong { color: var(--accent-dark); font-weight: 600; }
 
@@ -116,19 +134,62 @@ h3 {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* Header + GitHub badge --------------------------------------------------- */
-.gh-link {
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(13, 96, 96, 0.26);
+  outline-offset: 3px;
+}
+
+/* Skip link + top actions ------------------------------------------------- */
+.skip-link {
   position: absolute;
-  top: 1.2rem;
-  right: 1.25rem;
-  font-size: 0.82rem;
+  top: 0.8rem;
+  left: 1.25rem;
+  z-index: 100;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  background: white;
+  color: var(--accent-dark);
+  box-shadow: var(--surface-shadow);
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.15rem;
+}
+
+.context-link,
+.gh-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.84rem;
   color: var(--muted);
   border: 1px solid var(--border);
   background: var(--card);
-  padding: 0.3rem 0.7rem;
+  padding: 0.45rem 0.85rem;
   border-radius: 999px;
   letter-spacing: 0.02em;
 }
+
+.context-link {
+  color: var(--accent-dark);
+  border-color: rgba(44, 53, 39, 0.16);
+}
+
+.context-link:hover,
 .gh-link:hover {
   border-color: var(--accent);
   color: var(--accent);
@@ -136,38 +197,66 @@ a:hover { text-decoration: underline; }
 }
 
 header {
-  margin-bottom: 0.75rem;
-  margin-right: 7rem; /* leave room for the GitHub badge on wider screens */
+  margin-bottom: 0.9rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+main {
+  display: grid;
+  gap: 1.35rem;
 }
 
 /* Cold entry box ---------------------------------------------------------- */
 .cold-entry {
-  background: var(--card);
+  background: linear-gradient(180deg, #ffffff, #fcfbf8);
   border: 1px solid var(--border-soft);
-  border-left: 3px solid var(--accent);
-  border-radius: 4px;
-  padding: 0.85rem 1.1rem;
-  margin-top: 1rem;
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
   font-size: 0.94rem;
+  box-shadow: var(--surface-shadow);
 }
-.cold-entry p { margin: 0 0 0.4rem; color: var(--muted); }
-.scenarios { list-style: none; padding-left: 0; margin: 0; }
-.scenarios li { padding: 0.2rem 0; }
-.scenarios a { font-weight: 600; }
+.cold-entry p { margin: 0 0 0.75rem; color: var(--muted); }
+.scenarios {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.scenarios li {
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 0.8rem 0.85rem;
+}
+.scenarios a {
+  display: block;
+  font-weight: 700;
+  line-height: 1.35;
+}
 .scenario-note {
+  display: block;
   color: var(--muted);
   font-size: 0.88em;
-  margin-left: 0.4rem;
+  margin-top: 0.3rem;
 }
 
 /* Form -------------------------------------------------------------------- */
 form {
-  margin-top: 1.25rem;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: calc(var(--radius) + 2px);
+  padding: 1.4rem;
+  box-shadow: var(--surface-shadow);
 }
-form > h2:first-child { margin-top: 0; }
+form > h2:first-child { margin-top: 0; margin-bottom: 0.1rem; }
 form label {
   display: flex;
   flex-direction: column;
@@ -184,13 +273,14 @@ form label {
   font-size: 0.9em;
 }
 select {
-  padding: 0.5rem 0.65rem;
+  padding: 0.7rem 0.8rem;
   font: inherit;
   font-size: 0.96rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 12px;
   background: white;
   cursor: pointer;
+  min-height: 3rem;
 }
 select:focus {
   outline: 2px solid var(--accent);
@@ -199,26 +289,29 @@ select:focus {
 
 button[type="submit"] {
   align-self: flex-start;
-  padding: 0.7rem 1.4rem;
+  padding: 0.85rem 1.35rem;
   font: inherit;
   font-weight: 600;
   background: var(--accent);
   color: white;
   border: 0;
-  border-radius: 4px;
+  border-radius: 999px;
   cursor: pointer;
   letter-spacing: 0.01em;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
-  transition: background 0.1s;
+  box-shadow: 0 10px 20px rgba(13, 96, 96, 0.18);
+  transition: background 0.1s, transform 0.1s;
 }
-button[type="submit"]:hover { background: var(--accent-dark); }
+button[type="submit"]:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
 
 /* Callout (details/summary) ---------------------------------------------- */
 .callout {
   background: var(--callout-bg);
   border: 1px solid var(--border-soft);
-  border-radius: 4px;
-  padding: 0.6rem 1rem;
+  border-radius: 14px;
+  padding: 0.7rem 1rem;
   font-size: 0.93rem;
   margin-top: -0.3rem;
 }
@@ -305,9 +398,9 @@ button[type="submit"]:hover { background: var(--accent-dark); }
   margin-top: 2rem;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: calc(var(--radius) + 2px);
   padding: 1.5rem 1.75rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+  box-shadow: var(--surface-shadow);
 }
 .kit.escalate {
   border-color: var(--escalate);
@@ -364,7 +457,7 @@ button[type="submit"]:hover { background: var(--accent-dark); }
 pre.prompt, pre.code {
   background: var(--code-bg);
   border: 1px solid var(--border-soft);
-  border-radius: 4px;
+  border-radius: 12px;
   padding: 0.75rem 0.9rem;
   font-family: "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.85rem;
@@ -388,7 +481,7 @@ button.copy {
   font-size: 0.84rem;
   background: white;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 999px;
   cursor: pointer;
   color: var(--accent-dark);
 }
@@ -402,7 +495,7 @@ button.copy:hover {
   display: inline-block;
   padding: 0.45rem 1rem;
   border: 1px solid var(--accent);
-  border-radius: 4px;
+  border-radius: 999px;
   font-weight: 500;
 }
 .mailto:hover { background: var(--accent); color: white; text-decoration: none; }
@@ -432,6 +525,11 @@ footer {
   grid-template-columns: 1.3fr 1fr 1.1fr;
   gap: 1.75rem;
   align-items: start;
+  background: linear-gradient(180deg, #ffffff, #fcfbf8);
+  border: 1px solid var(--border-soft);
+  border-radius: calc(var(--radius) + 2px);
+  padding: 1.25rem 1.3rem;
+  box-shadow: var(--surface-shadow);
 }
 .footer-col h4 {
   margin: 0 0 0.35rem;
@@ -467,7 +565,7 @@ footer {
   display: inline-block;
   padding: 0.4rem 0.8rem;
   border: 1px solid var(--accent);
-  border-radius: 4px;
+  border-radius: 999px;
   color: var(--accent-dark);
   font-family: "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.82rem;
@@ -480,12 +578,7 @@ footer {
   text-decoration: none;
   border-color: var(--accent);
 }
-@media (max-width: 680px) {
-  .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
-}
-
 /* Scenario pages (rendered from examples/*.md by Jekyll) ----------------- */
-.scenario-page header { margin-right: 7rem; }
 .breadcrumb {
   margin: 0 0 0.75rem;
   font-size: 0.88rem;
@@ -495,9 +588,9 @@ footer {
 article.scenario {
   background: var(--card);
   border: 1px solid var(--border-soft);
-  border-radius: 6px;
+  border-radius: calc(var(--radius) + 2px);
   padding: 1.75rem 2rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+  box-shadow: var(--surface-shadow);
 }
 
 article.scenario h1 {
@@ -579,4 +672,66 @@ article.scenario hr {
   border: 0;
   border-top: 1px solid var(--border-soft);
   margin: 2rem 0;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-top: 1rem;
+  }
+
+  .top-actions {
+    align-items: stretch;
+  }
+
+  .context-link,
+  .gh-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  form {
+    padding: 1.15rem;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .scenarios {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    padding: 1rem 1.05rem;
+  }
+
+  article.scenario {
+    padding: 1.45rem 1.3rem;
+  }
+
+  article.scenario table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  article.scenario th,
+  article.scenario td {
+    min-width: 8rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .skip-link,
+  button[type="submit"] {
+    transition: none;
+  }
 }

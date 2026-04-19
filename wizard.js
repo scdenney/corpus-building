@@ -476,7 +476,9 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
     output.innerHTML = "";
     output.appendChild(render(kit, answers));
     output.classList.remove("hidden");
-    output.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    output.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    output.focus({ preventScroll: true });
   });
 
   // -------------------------------------------------------------------------

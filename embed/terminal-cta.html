@@ -5,77 +5,83 @@
      types itself in, then the cursor settles into a blink.
 -->
 
-<a class="cb-term" href="https://scdenney.github.io/corpus-building/"
-   aria-label="Launch the corpus-building wizard">
-  <div class="cb-term-bar">
-    <span class="cb-term-dot cb-dot-r" aria-hidden="true"></span>
-    <span class="cb-term-dot cb-dot-y" aria-hidden="true"></span>
-    <span class="cb-term-dot cb-dot-g" aria-hidden="true"></span>
-    <span class="cb-term-title">corpus-building — ~</span>
-  </div>
-  <div class="cb-term-body">
-    <div class="cb-term-line">
-      <span class="cb-term-prompt">$</span>
-      <span class="cb-term-cmd-wrap">
-        <span class="cb-term-cmd">corpus-building-wizard</span><span class="cb-term-cursor">▍</span>
-      </span>
+<div class="cb-term-embed" markdown="0">
+  <a class="cb-term" href="https://scdenney.github.io/corpus-building/"
+     aria-label="Launch the corpus-building wizard">
+    <div class="cb-term-bar">
+      <span class="cb-term-dot cb-dot-r" aria-hidden="true"></span>
+      <span class="cb-term-dot cb-dot-y" aria-hidden="true"></span>
+      <span class="cb-term-dot cb-dot-g" aria-hidden="true"></span>
+      <span class="cb-term-title">corpus-building - companion resource</span>
     </div>
-    <div class="cb-term-caption">
-      Turn a folder of PDFs into an analysis-ready text corpus.
-      Wizard hands you a starter kit for Claude Code or Codex.
-      <span class="cb-term-arrow">→</span>
+    <div class="cb-term-body">
+      <div class="cb-term-line">
+        <span class="cb-term-prompt">$</span>
+        <span class="cb-term-cmd-wrap">
+          <span class="cb-term-cmd">corpus-building-wizard</span><span class="cb-term-cursor">|</span>
+        </span>
+      </div>
+      <div class="cb-term-caption">
+        Turn a folder of source files into an analysis-ready text corpus.
+        The wizard hands you a starter kit for Claude Code or Codex.
+        <span class="cb-term-arrow">&rarr;</span>
+      </div>
     </div>
-  </div>
-</a>
+  </a>
+</div>
 
 <style>
+  .cb-term-embed {
+    margin: 1.75rem 0;
+  }
+
   .cb-term {
-    --cb-term-bg: #0f1a1a;
-    --cb-term-bar: #1a2b2b;
-    --cb-term-border: #0a1313;
-    --cb-term-fg: #dcecea;
-    --cb-term-dim: #94b3b0;
-    --cb-term-accent: #5ecbc0;
+    --cb-term-bg: #2C3527;
+    --cb-term-bar: #1F2820;
+    --cb-term-border: #141B14;
+    --cb-term-fg: #E8E4D8;
+    --cb-term-dim: #B6AE9D;
+    --cb-term-accent: #0D6060;
+    --cb-term-highlight: #F4A731;
 
     display: block;
-    max-width: 640px;
-    margin: 1.5rem 0;
+    max-width: 680px;
     text-decoration: none;
     color: inherit;
-    border-radius: 8px;
+    border-radius: 20px;
     overflow: hidden;
     background: var(--cb-term-bg);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 18px 32px rgba(31, 40, 32, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                  Helvetica, Arial, sans-serif;
   }
   .cb-term:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    box-shadow: 0 24px 42px rgba(31, 40, 32, 0.28);
   }
   .cb-term:focus-visible {
-    outline: 2px solid var(--cb-term-accent);
-    outline-offset: 2px;
+    outline: 3px solid rgba(13, 96, 96, 0.32);
+    outline-offset: 4px;
   }
 
   .cb-term-bar {
-    background: var(--cb-term-bar);
-    padding: 0.5rem 0.85rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), var(--cb-term-bar);
+    padding: 0.65rem 0.95rem;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.42rem;
     border-bottom: 1px solid var(--cb-term-border);
   }
   .cb-term-dot {
     width: 11px; height: 11px; border-radius: 50%;
     display: inline-block;
   }
-  .cb-dot-r { background: #ff5f56; }
-  .cb-dot-y { background: #ffbd2e; }
-  .cb-dot-g { background: #27c93f; }
+  .cb-dot-r { background: #D47570; }
+  .cb-dot-y { background: #F4A731; }
+  .cb-dot-g { background: #7BAA4A; }
   .cb-term-title {
-    margin-left: 0.7rem;
+    margin-left: 0.65rem;
     color: var(--cb-term-dim);
     font-size: 0.76rem;
     font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
@@ -83,7 +89,7 @@
   }
 
   .cb-term-body {
-    padding: 1.1rem 1.25rem 1.25rem;
+    padding: 1.15rem 1.25rem 1.2rem;
     color: var(--cb-term-fg);
   }
   .cb-term-line {
@@ -95,19 +101,17 @@
     gap: 0.55rem;
     white-space: nowrap;
   }
-  .cb-term-prompt { color: var(--cb-term-accent); font-weight: 700; }
+  .cb-term-prompt { color: var(--cb-term-highlight); font-weight: 700; }
   .cb-term-cmd-wrap {
     display: inline-flex;
     align-items: baseline;
-    position: relative;
   }
   .cb-term-cmd {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
     width: 22ch;
-    vertical-align: baseline;
-    animation: cb-term-type 1.3s steps(22, end) 0.4s both;
+    animation: cb-term-type 1.3s steps(22, end) 0.35s both;
   }
   @keyframes cb-term-type {
     from { width: 0; }
@@ -125,13 +129,13 @@
   }
 
   .cb-term-caption {
-    margin-top: 0.85rem;
+    margin-top: 0.8rem;
     color: var(--cb-term-dim);
-    font-size: 0.87rem;
+    font-size: 0.9rem;
     line-height: 1.55;
   }
   .cb-term-arrow {
-    color: var(--cb-term-accent);
+    color: var(--cb-term-highlight);
     font-weight: 700;
     margin-left: 0.15rem;
     transition: transform 0.2s ease;
@@ -139,6 +143,12 @@
   }
   .cb-term:hover .cb-term-arrow { transform: translateX(3px); }
   .cb-term:hover .cb-term-cmd { color: #fff; }
+
+  @media (max-width: 640px) {
+    .cb-term-line {
+      white-space: normal;
+    }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .cb-term-cmd { animation: none; width: auto; }

@@ -9,13 +9,13 @@
 
 <aside class="cb-mini-wizard">
   <span class="cb-mini-eyebrow">Quick route</span>
-  <h3>Should you use the full corpus-building wizard?</h3>
-  <p>Answer two questions. We'll launch the wizard with your corpus in mind.</p>
+  <h3>Which corpus-building path fits your project?</h3>
+  <p>Two questions. The full wizard opens with your answers already loaded.</p>
   <form method="get" action="https://scdenney.github.io/corpus-building/">
     <label>
       <span>How many pages?</span>
       <select name="pages" required>
-        <option value="">—</option>
+        <option value="">&mdash;</option>
         <option value="lt100">Less than 100</option>
         <option value="101_500">101–500</option>
         <option value="501_1k">501–1,000</option>
@@ -27,7 +27,7 @@
     <label>
       <span>What compute?</span>
       <select name="compute" required>
-        <option value="">—</option>
+        <option value="">&mdash;</option>
         <option value="alice">ALICE account</option>
         <option value="lucdh">LUCDH workstation</option>
         <option value="gpu_big">Local GPU, 16 GB or more</option>
@@ -35,93 +35,103 @@
         <option value="none">Laptop only</option>
       </select>
     </label>
-    <button type="submit">Launch the full wizard →</button>
+    <button type="submit">Open the full wizard &rarr;</button>
   </form>
 </aside>
 
 <style>
   .cb-mini-wizard {
-    --cb-accent: #0d6060;
-    --cb-accent-dark: #084040;
-    --cb-bg: #f7f5f0;
-    --cb-border: #d8d3c7;
-    --cb-muted: #55605c;
+    --cb-plum: #2C3527;
+    --cb-teal: #0D6060;
+    --cb-gold: #F4A731;
+    --cb-bg: #FAF6EF;
+    --cb-border: rgba(42, 34, 24, 0.12);
+    --cb-muted: #6B5D4F;
 
-    background: var(--cb-bg);
+    background: linear-gradient(180deg, #fff, #faf7f0);
     border: 1px solid var(--cb-border);
-    border-left: 3px solid var(--cb-accent);
-    border-radius: 6px;
-    padding: 1.1rem 1.25rem 1.2rem;
+    border-radius: 22px;
+    padding: 1.2rem 1.25rem 1.25rem;
     margin: 1.5rem 0;
-    max-width: 560px;
+    max-width: 580px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                  Helvetica, Arial, sans-serif;
     color: #1c1c1c;
     line-height: 1.55;
+    box-shadow: 0 18px 38px rgba(44, 53, 39, 0.08);
   }
   .cb-mini-wizard .cb-mini-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     font-size: 0.72rem;
     font-weight: 700;
-    color: var(--cb-accent-dark);
+    color: var(--cb-plum);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
+  .cb-mini-wizard .cb-mini-eyebrow::before {
+    content: "";
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cb-gold), var(--cb-teal));
+  }
   .cb-mini-wizard h3 {
-    margin: 0.25rem 0 0.3rem;
-    font-family: Georgia, "Iowan Old Style", "Apple Garamond", serif;
-    color: var(--cb-accent-dark);
-    font-size: 1.1rem;
+    margin: 0.35rem 0 0.3rem;
+    color: var(--cb-plum);
+    font-size: 1.22rem;
     font-weight: 600;
   }
   .cb-mini-wizard > p {
-    margin: 0 0 0.9rem;
+    margin: 0 0 0.95rem;
     color: var(--cb-muted);
-    font-size: 0.92rem;
+    font-size: 0.95rem;
   }
   .cb-mini-wizard form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.65rem 0.85rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem 0.85rem;
   }
   .cb-mini-wizard label {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
   .cb-mini-wizard label span {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--cb-accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--cb-plum);
   }
   .cb-mini-wizard select {
-    padding: 0.42rem 0.55rem;
+    padding: 0.55rem 0.65rem;
     font: inherit;
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     border: 1px solid var(--cb-border);
-    border-radius: 4px;
+    border-radius: 12px;
     background: white;
     cursor: pointer;
   }
   .cb-mini-wizard select:focus {
-    outline: 2px solid var(--cb-accent);
+    outline: 2px solid var(--cb-teal);
     outline-offset: 1px;
   }
   .cb-mini-wizard button {
     grid-column: 1 / -1;
     justify-self: start;
-    padding: 0.55rem 1.2rem;
+    margin-top: 0.2rem;
+    padding: 0.75rem 1.1rem;
     font: inherit;
-    font-weight: 600;
-    background: var(--cb-accent);
+    font-weight: 700;
+    background: var(--cb-plum);
     color: white;
     border: 0;
-    border-radius: 4px;
+    border-radius: 999px;
     cursor: pointer;
-    margin-top: 0.35rem;
     transition: background 0.12s;
   }
-  .cb-mini-wizard button:hover { background: var(--cb-accent-dark); }
-  @media (max-width: 480px) {
+  .cb-mini-wizard button:hover { background: #1f2820; }
+  @media (max-width: 640px) {
     .cb-mini-wizard form { grid-template-columns: 1fr; }
   }
 </style>
