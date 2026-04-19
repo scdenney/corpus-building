@@ -590,7 +590,18 @@ footer {
   text-decoration: underline;
 }
 .footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
   justify-self: end;
+}
+.footer-kicker {
+  color: var(--accent-dark);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .contact-link {
   display: inline-block;
@@ -754,7 +765,7 @@ article.scenario hr {
 
 @media (max-width: 680px) {
   .footer-inner { grid-template-columns: 1fr; gap: 0.9rem; }
-  .footer-contact { justify-self: start; }
+  .footer-contact { justify-self: start; align-items: flex-start; }
   .footer-links { gap: 0.35rem 0.8rem; }
 }
 
