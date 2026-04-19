@@ -39,11 +39,28 @@ h1 {
 }
 .lede {
   color: var(--fg);
-  margin: 0.35rem 0 0.6rem;
+  margin: 0.35rem 0 0.4rem;
   font-size: 1.0rem;
   line-height: 1.6;
 }
 .lede strong { color: var(--accent-dark); font-weight: 600; }
+
+.byline {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+.byline a {
+  color: var(--muted);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.byline a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 /* "What this assumes" drop-down below the lede ------------------------- */
 .more-info {
@@ -405,10 +422,66 @@ button.copy:hover {
 
 footer {
   margin-top: 3rem;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--border-soft);
-  color: var(--muted);
-  font-size: 0.88rem;
+  color: var(--fg);
+  font-size: 0.9rem;
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.1fr;
+  gap: 1.75rem;
+  align-items: start;
+}
+.footer-col h4 {
+  margin: 0 0 0.35rem;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.footer-col p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--fg);
+}
+.footer-col ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: none;
+}
+.footer-col li {
+  margin: 0.22rem 0;
+  position: relative;
+}
+.footer-col li::before {
+  content: "›";
+  position: absolute;
+  left: -0.9rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+.footer-col a { font-weight: 500; }
+.contact-link {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent-dark);
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  transition: background 0.12s, color 0.12s;
+}
+.contact-link:hover {
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-color: var(--accent);
+}
+@media (max-width: 680px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
 }
 
 /* Scenario pages (rendered from examples/*.md by Jekyll) ----------------- */

@@ -12,11 +12,16 @@
 
 <header>
   <h1>Corpus Building Wizard</h1>
-  <p class="lede">Answer six questions. Get a starter kit for Claude Code or Codex that turns your folder of PDFs into an analysis-ready text corpus.</p>
+  <p class="lede">Answer six questions. Get a starter kit for Claude Code or Codex that turns a folder of documents (PDFs, Word, HTML, ePub, XML, plain text) into an analysis-ready text corpus.</p>
+  <p class="byline">
+    by <a href="https://scdenney.github.io/thesis-supervision/">Dr. Steven Denney</a>,
+    Leiden University — Humanities.
+    Companion to the <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> primer.
+  </p>
   <details class="more-info">
     <summary>What this assumes &amp; where to learn more</summary>
     <div class="more-info-body">
-      <p>This is the <strong>computational path</strong> for corpus building — not a beginner's introduction. It assumes you've already thought about what corpus you want and why.</p>
+      <p>This is the <strong>computational path</strong> for corpus building — not a beginner's introduction. It assumes you've already thought about what corpus you want and why. Works on PDFs and on other source formats (DOCX, HTML, ePub, XML, plain text) via the <a href="skills/source-file-extraction/SKILL.html">source-file-extraction skill</a>.</p>
       <p>For the conceptual primer — what a corpus is, planning, selection criteria, ethics, organising files — read <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> on <a href="https://scdenney.github.io/thesis-supervision/">Thesis Supervision</a>.</p>
       <p>New to Claude Code or Codex? The <a href="https://github.com/scdenney/corpus-building#new-to-claude-code-or-codex">README</a> has a curated resource list — Anthropic and OpenAI docs plus practitioner guides.</p>
     </div>
@@ -165,7 +170,24 @@
 <section id="output" class="hidden" aria-live="polite"></section>
 
 <footer>
-  <p>Read the <a href="skills/corpus-from-pdfs/SKILL.html">framing skill</a>, or browse the <a href="skills/">skills directory</a>. Stuck? <a href="mailto:stevencdenney@gmail.com?subject=corpus%20building%20help">Email Steven</a>.</p>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>About this tool</h4>
+      <p>Built by <strong>Dr. Steven Denney</strong> — Leiden University, Faculty of Humanities. Part of a broader <a href="https://scdenney.github.io/thesis-supervision/">thesis supervision resource</a>.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Learn more</h4>
+      <ul>
+        <li><a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus primer</a></li>
+        <li><a href="https://github.com/scdenney/corpus-building#new-to-claude-code-or-codex">Agent-coding resources</a></li>
+        <li><a href="https://github.com/scdenney/corpus-building">Source repository</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Questions or stuck?</h4>
+      <p><a class="contact-link" href="mailto:s.c.denney@hum.leidenuniv.nl?subject=Corpus%20Building%20Wizard%20%E2%80%94%20help">s.c.denney@hum.leidenuniv.nl</a></p>
+    </div>
+  </div>
 </footer>
 
 <script src="wizard.js"></script>

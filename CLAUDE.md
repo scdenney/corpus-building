@@ -125,7 +125,7 @@ When mature, these skills can be added to the open-science-skills plugin. For no
 ## Status
 
 ### Done
-- [x] 5 skill SKILL.md files written (corpus-from-pdfs, alice-vllm-deploy, corpus-metadata-design, api-ocr-runner, hf-transformers-ocr)
+- [x] 6 skill SKILL.md files written (corpus-from-pdfs, source-file-extraction, alice-vllm-deploy, corpus-metadata-design, api-ocr-runner, hf-transformers-ocr)
 - [x] Directory structure created (skills/, scripts/, templates/, examples/, wizard/)
 - [x] CLAUDE.md with lessons from GEI, Webtoons, Pseudohistory, and open-science-skills
 - [x] Wizard question set drafted (`wizard/QUESTIONS.md`) — 6 questions, routing matrix, escalation triggers
