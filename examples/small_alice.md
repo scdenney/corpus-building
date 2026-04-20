@@ -10,7 +10,7 @@ title: "Small corpus via ALICE HPC"
 
 ## The situation
 
-A grad student studying democratization discourse in late-1970s South Korea has 75 historical newspaper issues (~800 pages, 1960s–1980s). Text mixes Hangul, occasional Hanja, and uneven archival print. Analysis target: Python topic modelling and keyword work grouped by year. ALICE account active, no API budget allocated.
+A grad student studying democratization discourse in late-1970s South Korea has 75 historical newspaper issues (~800 pages, 1960s–1980s). Text mixes Hangul, occasional Hanja, and uneven archival print. Analysis target: Python topic modeling and keyword work grouped by year. ALICE account active, no API budget allocated.
 
 ## Wizard answers
 
@@ -42,12 +42,12 @@ Est. time:       ~13 min cold start + ~90 min OCR + ~10 min post-processing
 3. `alice-vllm-deploy` — SLURM, cold-start timing, SSH discipline
 
 **Paste into Claude Code / Codex**
-> I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on `gpu_lucdh`. My analysis target is Python topic modelling grouped by year. Walk me through the `corpus-from-pdfs` pipeline. Start by helping me fill in the SLURM template and the Korean prompt. Then help me deploy and monitor the job.
+> I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on `gpu_lucdh`. My analysis target is Python topic modeling grouped by year. Walk me through the `corpus-from-pdfs` pipeline. Start by helping me fill in the SLURM template and the Korean prompt. Then help me deploy and monitor the job.
 
 **Or launch a fresh session directly**
 
 ```bash
-claude "I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on gpu_lucdh. My analysis target is Python topic modelling grouped by year. Walk me through the corpus-from-pdfs pipeline."
+claude "I have 75 historical Korean newspaper scans (roughly 800 pages). The text mixes Hangul with some Hanja and the print quality is uneven. I have an ALICE account and want to run vLLM on gpu_lucdh. My analysis target is Python topic modeling grouped by year. Walk me through the corpus-from-pdfs pipeline."
 ```
 
 **Files to copy**
@@ -223,7 +223,7 @@ python3 scripts/corpus_assembler.py --parse-tags \
 import pandas as pd
 
 corpus = pd.read_csv("corpus/corpus.csv")
-# ...proceed to Korean tokenisation and topic modelling
+# ...proceed to Korean tokenization and topic modeling
 ```
 
 ---

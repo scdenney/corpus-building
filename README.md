@@ -16,7 +16,7 @@
 
 A **text corpus** is a structured collection of documents — usually one row per article or page, with metadata — ready to load into analysis software like Orange, R, or Python. Getting there from a folder of source files (PDFs most often, but also Word documents, HTML, ePub, XML, plain text) involves real decisions: which extraction or OCR approach to use, what metadata to track, how to structure the output. The repo gives you a wizard that picks sensible defaults, a set of Claude Code skills that codify the choices, and the scripts and templates that make the pipeline reproducible.
 
-Built primarily for students and staff at **Leiden University**, but works for anyone with documents and a Claude or OpenAI account. The repo stops at the analysis-ready corpus — what happens *after* (topic modelling, NER, classification, embeddings) is a separate future module.
+Built primarily for students and staff at **Leiden University**, but works for anyone with documents and a Claude or OpenAI account. The repo stops at the analysis-ready corpus — what happens *after* (topic modeling, NER, classification, embeddings) is a separate future module.
 
 ## The pipeline at a glance
 

@@ -60,7 +60,7 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 - Python
 - Not sure yet
 
-*Tailors the suggested metadata schema and output format (Orange prefers flat CSV, R/Python are flexible with tidy CSV or JSON). Does not change the routing path. **Method** questions — topic modelling, NER, embeddings, classification — are downstream of corpus building and handled in a separate future module.*
+*Tailors the suggested metadata schema and output format (Orange prefers flat CSV, R/Python are flexible with tidy CSV or JSON). Does not change the routing path. **Method** questions — topic modeling, NER, embeddings, classification — are downstream of corpus building and handled in a separate future module.*
 
 ### 6. Resource constraints?
 - No budget; time is flexible
