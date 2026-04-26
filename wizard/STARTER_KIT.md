@@ -1,6 +1,6 @@
 # Wizard Output: The Starter Kit
 
-What the wizard renders after a student answers the 6 questions in `QUESTIONS.md`. The wizard is a static page; this spec defines the structure of its output card, and the rendered HTML must match it. Three concrete examples at the bottom show what the card looks like for the three canonical routing outcomes.
+What the wizard renders after a student answers the 7 questions in `QUESTIONS.md`. The wizard is a static page; this spec defines the structure of its output card, and the rendered HTML must match it. Three concrete examples at the bottom show what the card looks like for the three canonical routing outcomes.
 
 **Design principles**
 
@@ -12,7 +12,7 @@ What the wizard renders after a student answers the 6 questions in `QUESTIONS.md
 
 ## Card structure
 
-The rendered page has six sections, in order:
+The rendered page has seven sections, in order:
 
 ### § 1. Header
 ```
@@ -56,7 +56,10 @@ A checklist of templates to copy into the student's project directory. Each entr
 ### § 5. Commands (pre-filled with your answers)
 Four to six shell commands, in order, with the student's answers substituted where possible. Example placeholders use `<...>`; fields like `--pages` are already numeric from the wizard.
 
-### § 6. Stuck? Escalate.
+### § 6. Quality gates + expected outputs
+A short checklist that keeps the AI-assisted workflow auditable: manifest review, pilot tranche, source comparison, corpus assembly, and a methods note documenting prompts, scripts, exclusions, and transformations.
+
+### § 7. Stuck? Escalate.
 A single button: `mailto:stevencdenney@gmail.com` with subject and body pre-filled from the wizard state. Always visible; highlighted when an escalation trigger fired.
 
 ---
@@ -99,7 +102,7 @@ Est. time:       2–3 hours sustained API calls + ~10 min of local stages
 
 **§ 5. Commands**
 ```
-python3 scripts/inventory_builder.py --pdf-dir ./articles --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./articles --output manifest.csv
 python3 scripts/cost_estimator.py --pages 750 --compare
 # OCR step — client script written with Claude Code's help, sends base64
 # page images to the Claude API, writes results_raw.json per article
@@ -141,7 +144,7 @@ Est. time:       ~13 min cold start + ~90 min OCR + ~10 min post-processing
 
 **§ 5. Commands**
 ```
-python3 scripts/inventory_builder.py --pdf-dir ./newspapers --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./newspapers --output manifest.csv
 bash scripts/alice_deploy.sh \
     --host alice3 \
     --code-src ./pipeline --data-src ./newspapers \
@@ -186,7 +189,7 @@ Est. time:       ~5 min model load + ~3 hours sequential OCR + ~10 min assembly
 
 **§ 5. Commands**
 ```
-python3 scripts/inventory_builder.py --pdf-dir ./articles --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./articles --output manifest.csv
 # OCR step — HF Transformers client (built with Claude Code's help):
 # loads Qwen3-VL-32B with BnB NF4, processes each page, writes results_raw.json
 python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv --output corpus/
@@ -198,5 +201,5 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
 
 - **Codex variant.** The "Paste this into Claude Code" prompt works for Codex unchanged. The Copy-for-Codex button exists only to make the path obvious to non-Claude-Code users. Don't introduce different wording — the prompt should be agent-agnostic.
 - **The OCR step is always guided, never copy-pasted.** The commands in § 5 omit the OCR client invocation for API and local-GPU paths deliberately: the client is built inside Claude Code, with the agent reading the appropriate skill and helping the student write the ~50 lines of glue. Scripting this as a one-liner would defeat the teaching purpose.
-- **Escalation triggers (from `QUESTIONS.md`) still apply.** When one fires, § 6 is highlighted and the § 3 prompt gains a suffix: "I may need help from Steven — I've sent him the wizard output."
+- **Escalation triggers (from `QUESTIONS.md`) still apply.** When one fires, the escalation section is highlighted and the prompt gains a suffix: "I may need help from Steven — I've sent him the wizard output."
 - **No analytics.** The wizard does not POST user answers anywhere. The `mailto:` is the only way answers leave the browser, and only when the student clicks.

@@ -20,7 +20,7 @@
 <header>
   <p class="eyebrow">Companion resource</p>
   <h1>Corpus Building Wizard</h1>
-  <p class="lede">Answer six questions. Get a starter kit for Claude Code or Codex that turns a folder of documents (PDFs, Word, HTML, ePub, XML, plain text) into an analysis-ready text corpus.</p>
+  <p class="lede">Answer seven questions. Get a starter kit for Claude Code or Codex that turns a folder of source files into an analysis-ready text corpus.</p>
   <p class="byline">
     <a href="https://scdenney.github.io/thesis-supervision/">Steven Denney</a>, Leiden University.
     Companion to the <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> primer on <a href="https://scdenney.github.io/thesis-supervision/">Thesis &amp; Research Supervision</a>.
@@ -28,7 +28,7 @@
   <details class="more-info">
     <summary>Before you start: assumptions and useful links</summary>
     <div class="more-info-body">
-      <p>This is the <strong>computational path</strong> for corpus building, not a beginner's introduction. It assumes you've already thought about what corpus you want and why. Works on PDFs and on other source formats (DOCX, HTML, ePub, XML, plain text) via the <a href="skills/source-file-extraction/SKILL.html">source-file-extraction skill</a>.</p>
+      <p>This is the <strong>computational path</strong> for corpus building, not a beginner's introduction. It assumes you've already thought about what corpus you want and why. It now routes both OCR-heavy work and non-PDF source extraction through the relevant skills.</p>
       <p>For the conceptual primer (what a corpus is, planning, selection criteria, ethics, organizing files), read <a href="https://scdenney.github.io/thesis-supervision/methods/building-a-corpus">Building a Corpus</a> on <a href="https://scdenney.github.io/thesis-supervision/">Thesis &amp; Research Supervision</a>.</p>
       <p>New to Claude Code or Codex? The <a href="https://github.com/scdenney/corpus-building#new-to-claude-code-or-codex">README</a> has a curated resource list: Anthropic and OpenAI docs plus practitioner guides.</p>
     </div>
@@ -45,8 +45,27 @@
     </ul>
   </section>
 
+  <section class="outcome-strip" aria-label="What the wizard produces">
+    <article>
+      <span>1</span>
+      <strong>A route</strong>
+      <p>API, ALICE/HPC, local GPU, or text extraction first.</p>
+    </article>
+    <article>
+      <span>2</span>
+      <strong>An AI handoff</strong>
+      <p>A Claude Code or Codex prompt already filled with your project details.</p>
+    </article>
+    <article>
+      <span>3</span>
+      <strong>A corpus check</strong>
+      <p>Quality gates before you scale up or cite the result.</p>
+    </article>
+  </section>
+
   <form id="wizard">
-    <h2>Tell us about your corpus</h2>
+    <h2>Tell me about your corpus</h2>
+    <p class="form-intro">Use rough answers. The starter kit is meant to begin an inspectable workflow, not decide the method for you.</p>
 
     <label>
       <span class="q">1. How many pages total?</span>
@@ -62,7 +81,19 @@
     </label>
 
     <label>
-      <span class="q">2. What compute do you have access to?</span>
+      <span class="q">2. What source files are you starting from?</span>
+      <select name="source" required>
+        <option value="">— pick one —</option>
+        <option value="pdf_scan">Scanned PDFs or page images</option>
+        <option value="pdf_text">Born-digital PDFs with selectable text</option>
+        <option value="office_text">Word, text, Markdown, RTF, or CSV exports</option>
+        <option value="web_structured">HTML, ePub, XML/TEI, or scraped web pages</option>
+        <option value="mixed">Mixed formats or not sure yet</option>
+      </select>
+    </label>
+
+    <label>
+      <span class="q">3. What compute do you have access to?</span>
       <select name="compute" required>
         <option value="">— pick one —</option>
         <option value="alice">ALICE account, ready to use</option>
@@ -123,7 +154,7 @@
     </details>
 
     <label>
-      <span class="q">3. What languages or scripts are in the documents?</span>
+      <span class="q">4. What languages or scripts are in the documents?</span>
       <select name="language" required>
         <option value="">— pick one —</option>
         <option value="latin">Latin only (English, European languages)</option>
@@ -135,7 +166,7 @@
     </label>
 
     <label>
-      <span class="q">4. What kind of documents?</span>
+      <span class="q">5. What kind of documents?</span>
       <select name="doctype" required>
         <option value="">— pick one —</option>
         <option value="book">Books or book chapters</option>
@@ -151,7 +182,7 @@
     </label>
 
     <label>
-      <span class="q">5. What software will you use? <em>(optional)</em></span>
+      <span class="q">6. What software will you use? <em>(optional)</em></span>
       <select name="analysis">
         <option value="">— pick one —</option>
         <option value="orange">Orange Data Mining</option>
@@ -162,7 +193,7 @@
     </label>
 
     <label>
-      <span class="q">6. Resource constraints?</span>
+      <span class="q">7. Resource constraints?</span>
       <select name="constraints" required>
         <option value="">— pick one —</option>
         <option value="free_time">No budget; time is flexible</option>

@@ -228,6 +228,7 @@ header {
 main {
   display: grid;
   gap: 1.35rem;
+  min-width: 0;
 }
 
 /* Cold entry box ---------------------------------------------------------- */
@@ -250,6 +251,7 @@ main {
   gap: 0.75rem;
 }
 .scenarios li {
+  min-width: 0;
   background: var(--bg);
   border: 1px solid var(--border-soft);
   border-radius: 12px;
@@ -265,6 +267,52 @@ main {
   color: var(--muted);
   font-size: 0.88em;
   margin-top: 0.3rem;
+  overflow-wrap: break-word;
+}
+
+.outcome-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.outcome-strip article {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.1rem 0.65rem;
+  align-items: start;
+  padding: 0.9rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #fcfbf8);
+}
+
+.outcome-strip span {
+  display: inline-flex;
+  grid-row: 1 / span 2;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.outcome-strip strong {
+  color: var(--accent-dark);
+  font-size: 0.94rem;
+  line-height: 1.2;
+}
+
+.outcome-strip p {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 
 /* Form -------------------------------------------------------------------- */
@@ -273,6 +321,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: calc(var(--radius) + 2px);
@@ -280,8 +329,15 @@ form {
   box-shadow: var(--surface-shadow);
 }
 form > h2:first-child { margin-top: 0; margin-bottom: 0.1rem; }
+.form-intro {
+  margin: -0.3rem 0 0.15rem;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
 form label {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 0.35rem;
 }
@@ -296,6 +352,8 @@ form label {
   font-size: 0.9em;
 }
 select {
+  width: 100%;
+  min-width: 0;
   padding: 0.7rem 0.8rem;
   font: inherit;
   font-size: 0.96rem;
@@ -422,6 +480,11 @@ button[type="submit"]:hover {
 /* Output kit -------------------------------------------------------------- */
 .hidden { display: none; }
 
+#output:focus {
+  outline: 2px solid rgba(0, 103, 105, 0.35);
+  outline-offset: 6px;
+}
+
 .kit {
   margin-top: 2rem;
   background: var(--card);
@@ -500,6 +563,9 @@ pre.code.launch {
   background: #0f1a1a;
   color: #dcecea;
   border-color: #0a1313;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 button.copy {
@@ -758,6 +824,14 @@ article.scenario hr {
 
   .cold-entry {
     padding: 0.95rem 0.95rem;
+  }
+
+  .scenarios {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome-strip {
+    grid-template-columns: 1fr;
   }
 
   .scenarios li {

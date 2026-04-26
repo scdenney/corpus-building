@@ -55,7 +55,7 @@ claude "I have 75 Korean newspaper editorials (roughly 750 pages) saved as PDFs 
 
 **Commands (pre-filled)**
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./editorials --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./editorials --output manifest.csv
 python3 scripts/cost_estimator.py --pages 750 --compare
 # OCR step — client script built with Claude Code, sends base64 page images
 #   to the Claude API, writes results_raw.json per editorial PDF
@@ -69,7 +69,7 @@ python3 scripts/corpus_assembler.py --parse-tags --ocr-dir ocr_output --manifest
 ### Step 1: Inventory
 
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./editorials --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./editorials --output manifest.csv
 ```
 
 Expected output:

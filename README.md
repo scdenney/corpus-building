@@ -47,7 +47,7 @@ flowchart LR
 - [Small corpus via ALICE HPC](examples/small_alice.md) — historical Korean newspapers, free compute
 - [Small corpus on a local GPU](examples/small_local_gpu.md) — RTX 3060, no cloud cost
 
-**Build your own.** Take the [wizard](https://scdenney.github.io/corpus-building/). Six questions in, you have a starter kit: which skills to read, which templates to copy, and a one-line terminal command that launches Claude Code or Codex already primed with your specifics.
+**Build your own.** Take the [wizard](https://scdenney.github.io/corpus-building/). Seven questions in, you have a starter kit: which skills to read, which templates to copy, which quality checks to run, and a one-line terminal command that launches Claude Code or Codex already primed with your specifics.
 
 **Use the skills in Claude Code directly.** Each skill in `skills/` has YAML frontmatter with trigger phrases; Claude Code auto-detects them. Install project-level (`cp -r skills/corpus-from-pdfs /your/project/.claude/skills/`) or user-level (`cp -r skills/* ~/.claude/skills/`). Call one explicitly with `/corpus-from-pdfs I have 75 Korean newspaper editorials...`.
 

@@ -1,6 +1,6 @@
 # Wizard Question Set
 
-A routing wizard for the corpus-building skills. 6 questions → personalized starter kit (which skills to invoke, which template to copy, which script to run), or an escalation `mailto:` to Steven for hard cases.
+A routing wizard for the corpus-building skills. 7 questions -> personalized starter kit (which skills to invoke, which template to copy, which script to run, which quality gates to check), or an escalation `mailto:` to Steven for hard cases.
 
 **Cold entry**: users who just want to see what this produces can skip the wizard and open a [scenario demo](../examples/) — a walkthrough showing the starter-kit output for a representative project (small-corpus API, small ALICE, small local-GPU). One link at the top of the wizard page, not a second path through it.
 
@@ -22,7 +22,16 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 *Scale dictates API vs. HPC. Anything under 5,000 is realistic on the API path; above that, HPC starts to dominate on cost.*
 
-### 2. What compute do you have access to?
+### 2. What source files are you starting from?
+- Scanned PDFs or page images
+- Born-digital PDFs with selectable text
+- Word, text, Markdown, RTF, or CSV exports
+- HTML, ePub, XML/TEI, or scraped web pages
+- Mixed formats or not sure yet
+
+*Selects whether the first move is OCR, direct text extraction, or per-file classification with OCR fallback. This is the main guardrail against sending born-digital or structured sources through unnecessary VLM OCR.*
+
+### 3. What compute do you have access to?
 - ALICE account, ready to use
 - LUCDH workstation access
 - Different SLURM cluster (adaptation needed)
@@ -32,7 +41,7 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 *Gates which execution skills apply. See the "Learn more" callout on the wizard page for what ALICE and LUCDH offer and how to get access.*
 
-### 3. What languages or scripts are in the documents?
+### 4. What languages or scripts are in the documents?
 - Latin only (English, European languages)
 - CJK (Korean, Chinese, Japanese)
 - Historical scripts / Fraktur / older orthographies
@@ -41,7 +50,7 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 *Affects model choice and prompt engineering. Non-Latin scripts need explicit character-set enumeration in prompts.*
 
-### 4. What kind of documents?
+### 5. What kind of documents?
 - Books or book chapters
 - Journal articles
 - Newspapers or magazines
@@ -54,7 +63,7 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 *Selects prompt template. Comics use type-classification; newspapers use layout-aware prompting; forms are a different problem entirely and may need OCR + structure extraction.*
 
-### 5. What software will you use? *(optional)*
+### 6. What software will you use? *(optional)*
 - Orange Data Mining
 - R
 - Python
@@ -62,7 +71,7 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 *Tailors the suggested metadata schema and output format (Orange prefers flat CSV, R/Python are flexible with tidy CSV or JSON). Does not change the routing path. **Method** questions — topic modeling, NER, embeddings, classification — are downstream of corpus building and handled in a separate future module.*
 
-### 6. Resource constraints?
+### 7. Resource constraints?
 - No budget; time is flexible
 - Small budget (under $100); moderate timeline
 - Project grant; flexible timeline
@@ -76,6 +85,8 @@ A routing wizard for the corpus-building skills. 6 questions → personalized st
 
 | Pages | Compute | Recommendation |
 |-------|---------|----------------|
+| any | born-digital PDFs / Office / web / XML | Text extraction first -> `source-file-extraction` |
+| any | mixed or unknown source formats | Classify per file -> `source-file-extraction` + OCR fallback |
 | ≤ 1,000 | any | API path → `api-ocr-runner` |
 | 1,001–5,000 | none or small GPU | API path |
 | 1,001–5,000 | ALICE / LUCDH | HPC path → `alice-vllm-deploy` |
@@ -94,6 +105,7 @@ Regardless of route, every user gets:
 
 - `corpus-from-pdfs` — the end-to-end framing (read first)
 - `corpus-metadata-design` — schema design (read before building)
+- `source-file-extraction` — included whenever the source is not straightforward scanned PDFs
 
 ---
 
@@ -112,11 +124,12 @@ Send to Steven when:
 
 ## Starter Kit Output
 
-The wizard renders six sections — see `STARTER_KIT.md` for the full spec:
+The wizard renders seven sections — see `STARTER_KIT.md` for the full spec:
 
 1. **Header**: recommended path, corpus scale, cost, time estimate
 2. **Read first**: 2–3 skills in numbered order
 3. **Paste into Claude Code / Codex**: agent-ready prompt prefilled from answers
 4. **Launch command**: one-line terminal invocation (`claude "..."` or `codex "..."`) to copy-paste
 5. **Files to copy + commands**: templates to grab and the shell sequence to run
-6. **Escalation**: `mailto:` button, always present, highlighted when an escalation trigger fired
+6. **Quality gates + expected outputs**: pilot tranche, source checks, final corpus files, and methods documentation
+7. **Escalation**: `mailto:` button, always present, highlighted when an escalation trigger fired

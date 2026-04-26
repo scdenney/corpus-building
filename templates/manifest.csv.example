@@ -1,4 +1,4 @@
-# Manifest CSV — one row per PDF.
+# Manifest CSV — one row per source file.
 #
 # The manifest is the single source of truth for the pipeline. Build it
 # programmatically from the source directory (see scripts/inventory_builder.py)
@@ -6,13 +6,18 @@
 # (scripts/alice_deploy.sh).
 #
 # Required columns:
-#   pdf_id          Unique identifier. Convention: <series>_<lang>_<chapter>.
+#   pdf_id          Stable document identifier. The legacy name is kept because
+#                   the downstream assembler expects it.
+#   source_format   Format class from inventory_builder.py: pdf, docx, html,
+#                   epub, xml, text, rtf, csv, image, etc.
 #   language        Lowercase label matching the PROMPTS dict in prompts.py
 #                   (e.g. "korean", "polish", "english").
-#   filename        Original PDF filename (basename only, no directory).
-#   pdf_path        Absolute path to the PDF. Local on the student's machine
-#                   before deployment; /zfsstore/... after rewriting for ALICE.
-#   total_pages     Page count (from PyMuPDF).
+#   filename        Original source filename (basename only, no directory).
+#   source_path     Absolute path to the source file.
+#   pdf_path        Absolute path to the PDF when source_format=pdf. Blank for
+#                   non-PDF sources; retained for older OCR scripts.
+#   total_pages     Page count for PDFs (from PyMuPDF). Blank for formats where
+#                   page count is not meaningful.
 #   content_start   0-indexed page where content begins, inclusive (skips
 #                   title pages, Naver navigation UI on page 0 of Korean
 #                   webtoon PDFs, etc.).
@@ -31,9 +36,9 @@
 # CSV readers should skip lines starting with '#'. In pandas:
 #   pd.read_csv('manifest.csv', comment='#')
 # ---------------------------------------------------------------------------
-pdf_id,series,series_title,language,chapter,filename,pdf_path,total_pages,content_start,content_end
-empress_kr_001,empress,I Abdicate My Title of Empress,korean,1,1화.pdf,/path/to/empress/korean/1화.pdf,82,1,78
-empress_kr_002,empress,I Abdicate My Title of Empress,korean,2,2화.pdf,/path/to/empress/korean/2화.pdf,95,1,92
-empress_en_001,empress,I Abdicate My Title of Empress,english,1,Episode 1.pdf,/path/to/empress/english/Episode 1.pdf,116,0,111
-empress_en_002,empress,I Abdicate My Title of Empress,english,2,Episode 2.pdf,/path/to/empress/english/Episode 2.pdf,136,0,132
-polish_hist_1970,gei_polish,Historia Polski kl. 5,polish,,historia_5kl_1970.pdf,/path/to/gei/poland/historia_5kl_1970.pdf,248,4,240
+pdf_id,source_format,series,series_title,language,chapter,filename,source_path,pdf_path,total_pages,content_start,content_end
+empress_kr_001,pdf,empress,I Abdicate My Title of Empress,korean,1,1화.pdf,/path/to/empress/korean/1화.pdf,/path/to/empress/korean/1화.pdf,82,1,78
+empress_kr_002,pdf,empress,I Abdicate My Title of Empress,korean,2,2화.pdf,/path/to/empress/korean/2화.pdf,/path/to/empress/korean/2화.pdf,95,1,92
+empress_en_001,pdf,empress,I Abdicate My Title of Empress,english,1,Episode 1.pdf,/path/to/empress/english/Episode 1.pdf,/path/to/empress/english/Episode 1.pdf,116,0,111
+polish_hist_1970,pdf,gei_polish,Historia Polski kl. 5,polish,,historia_5kl_1970.pdf,/path/to/gei/poland/historia_5kl_1970.pdf,/path/to/gei/poland/historia_5kl_1970.pdf,248,4,240
+policy_report_2022,docx,reports,Policy Reports,english,,policy_report_2022.docx,/path/to/reports/policy_report_2022.docx,,,,

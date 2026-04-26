@@ -55,7 +55,7 @@ claude "I have 75 English committee reports (roughly 750 pages) and a local RTX 
 
 **Commands (pre-filled)**
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./reports --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./reports --output manifest.csv
 # OCR step — HF Transformers client built with Claude Code:
 #   loads Qwen3-VL-8B with BnB NF4, processes each page,
 #   writes ocr_output/<pdf_id>/results_raw.json
@@ -71,7 +71,7 @@ python3 scripts/corpus_assembler.py --ocr-dir ocr_output --manifest manifest.csv
 ### Step 1: Inventory (local)
 
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./reports --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./reports --output manifest.csv
 ```
 
 ```

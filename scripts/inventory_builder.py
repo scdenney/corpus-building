@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """
-inventory_builder.py — walk a directory of PDFs and build a manifest CSV.
+inventory_builder.py — walk a directory of source files and build a manifest CSV.
 
 This is the Stage 0 of a corpus-building pipeline. Given a root directory
-containing PDFs (flat or nested), it produces a manifest.csv with:
+containing PDFs or other source files (flat or nested), it produces a
+manifest.csv with:
 
-    pdf_id, filename, pdf_path, total_pages, content_start, content_end,
-    [language], [parent_folder]
+    pdf_id, source_format, filename, source_path, pdf_path,
+    total_pages, content_start, content_end, [language], [parent_folder]
 
 Design choices:
 
 - Filenames are NFC-normalized before use (macOS HFS+/APFS decomposes Korean,
   Japanese, and accented characters to NFD; regex matching against those
   filenames silently fails without normalization).
-- Page counts come from PyMuPDF when available; otherwise left blank.
+- Page counts come from PyMuPDF for PDFs when available; otherwise left blank.
+- Non-PDF sources are included with source_format/source_path so the
+  source-file-extraction skill can route them to the right extractor.
 - Content range detection (content_start / content_end) is optional and
   opt-in via --detect-content. Two built-in detectors: Naver webtoon UI on
   page 0 (selectable text with known Korean nav strings), and "tail
@@ -24,6 +27,7 @@ Design choices:
   /Thesis/pipeline/inventory.py for a worked multi-series example.
 
 Usage:
+    inventory_builder.py --source-dir ./sources --output manifest.csv
     inventory_builder.py --pdf-dir ./pdfs --output manifest.csv
     inventory_builder.py --pdf-dir ./pdfs --output manifest.csv \\
         --language-from-folder --detect-content
@@ -42,6 +46,28 @@ try:
     HAS_FITZ = True
 except ImportError:
     HAS_FITZ = False
+
+
+SUPPORTED_EXTENSIONS = {
+    ".pdf": "pdf",
+    ".docx": "docx",
+    ".doc": "doc",
+    ".txt": "text",
+    ".md": "text",
+    ".rtf": "rtf",
+    ".csv": "csv",
+    ".html": "html",
+    ".htm": "html",
+    ".epub": "epub",
+    ".xml": "xml",
+    ".tei": "tei",
+    ".json": "json",
+    ".jpg": "image",
+    ".jpeg": "image",
+    ".png": "image",
+    ".tif": "image",
+    ".tiff": "image",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -103,9 +129,9 @@ def total_pages(pdf_path: Path) -> int | None:
 # CLI
 # ---------------------------------------------------------------------------
 
-def make_pdf_id(pdf_path: Path, root: Path) -> str:
-    """Generate a stable pdf_id from the path relative to root."""
-    rel = pdf_path.relative_to(root)
+def make_pdf_id(source_path: Path, root: Path) -> str:
+    """Generate a stable legacy pdf_id/doc id from the path relative to root."""
+    rel = source_path.relative_to(root)
     stem = unicodedata.normalize("NFC", rel.stem)
     parts = [unicodedata.normalize("NFC", p) for p in rel.parts[:-1]]
     parts.append(stem)
@@ -113,39 +139,58 @@ def make_pdf_id(pdf_path: Path, root: Path) -> str:
     return "".join(c if c.isalnum() or c in "-_" else "_" for c in safe).strip("_").lower()
 
 
+def classify_source(source_path: Path) -> str:
+    return SUPPORTED_EXTENSIONS.get(source_path.suffix.lower(), "unknown")
+
+
+def iter_sources(source_dir: Path, pdf_only: bool) -> list[Path]:
+    if pdf_only:
+        return sorted(source_dir.rglob("*.pdf"))
+    return sorted(
+        p for p in source_dir.rglob("*")
+        if p.is_file() and p.suffix.lower() in SUPPORTED_EXTENSIONS
+    )
+
+
 def build_rows(
-    pdf_dir: Path,
+    source_dir: Path,
     language_from_folder: bool,
     detect_content: bool,
+    pdf_only: bool,
 ) -> list[dict]:
     rows = []
-    pdfs = sorted(pdf_dir.rglob("*.pdf"))
-    print(f"Found {len(pdfs)} PDFs under {pdf_dir}")
+    sources = iter_sources(source_dir, pdf_only)
+    label = "PDFs" if pdf_only else "supported source files"
+    print(f"Found {len(sources)} {label} under {source_dir}")
 
-    for pdf_path in pdfs:
-        filename = unicodedata.normalize("NFC", pdf_path.name)
+    for source_path in sources:
+        filename = unicodedata.normalize("NFC", source_path.name)
+        source_fmt = classify_source(source_path)
+        is_pdf = source_fmt == "pdf"
         row = {
-            "pdf_id": make_pdf_id(pdf_path, pdf_dir),
+            "pdf_id": make_pdf_id(source_path, source_dir),
+            "source_format": source_fmt,
             "filename": filename,
-            "pdf_path": str(pdf_path.resolve()),
+            "source_path": str(source_path.resolve()),
+            "pdf_path": str(source_path.resolve()) if is_pdf else "",
             "total_pages": "",
             "content_start": "",
             "content_end": "",
         }
 
         if language_from_folder:
-            row["language"] = unicodedata.normalize("NFC", pdf_path.parent.name).lower()
+            row["language"] = unicodedata.normalize("NFC", source_path.parent.name).lower()
 
-        row["parent_folder"] = unicodedata.normalize("NFC", pdf_path.parent.name)
+        row["parent_folder"] = unicodedata.normalize("NFC", source_path.parent.name)
 
-        if detect_content:
-            cs, ce, tot = detect_content_range(pdf_path)
+        if detect_content and is_pdf:
+            cs, ce, tot = detect_content_range(source_path)
             if tot >= 0:
                 row["total_pages"] = tot
                 row["content_start"] = cs
                 row["content_end"] = ce
-        else:
-            n = total_pages(pdf_path)
+        elif is_pdf:
+            n = total_pages(source_path)
             if n is not None:
                 row["total_pages"] = n
                 row["content_start"] = 0
@@ -158,11 +203,12 @@ def build_rows(
 
 def write_manifest(rows: list[dict], output: Path, include_language: bool) -> None:
     fieldnames = [
-        "pdf_id", "filename", "pdf_path", "parent_folder",
+        "pdf_id", "source_format", "filename", "source_path", "pdf_path",
+        "parent_folder",
         "total_pages", "content_start", "content_end",
     ]
     if include_language:
-        fieldnames.insert(3, "language")
+        fieldnames.insert(2, "language")
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with open(output, "w", encoding="utf-8", newline="") as f:
@@ -180,14 +226,21 @@ def write_manifest(rows: list[dict], output: Path, include_language: bool) -> No
 
 def print_summary(rows: list[dict]) -> None:
     print()
-    print(f"  Total PDFs:     {len(rows)}")
+    print(f"  Total sources:  {len(rows)}")
+    formats = {}
+    for row in rows:
+        fmt = row.get("source_format", "unknown")
+        formats[fmt] = formats.get(fmt, 0) + 1
+    if formats:
+        print("  Formats:        " + ", ".join(f"{k}={v}" for k, v in sorted(formats.items())))
     total = sum(int(r["total_pages"]) for r in rows if r["total_pages"] != "")
-    print(f"  Total pages:    {total}")
-    content = 0
-    for r in rows:
-        if r["content_start"] != "" and r["content_end"] != "":
-            content += int(r["content_end"]) - int(r["content_start"]) + 1
-    print(f"  Content pages:  {content}")
+    if total:
+        print(f"  Total pages:    {total}")
+        content = 0
+        for r in rows:
+            if r["content_start"] != "" and r["content_end"] != "":
+                content += int(r["content_end"]) - int(r["content_start"]) + 1
+        print(f"  Content pages:  {content}")
     langs = sorted({r.get("language", "") for r in rows if r.get("language")})
     if langs:
         print(f"  Languages:      {', '.join(langs)}")
@@ -195,16 +248,17 @@ def print_summary(rows: list[dict]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
-        description="Walk a PDF directory and build a manifest CSV.",
+        description="Walk a source directory and build a manifest CSV.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    ap.add_argument("--pdf-dir", type=Path, required=True, help="Root directory to scan recursively.")
+    ap.add_argument("--source-dir", type=Path, help="Root directory of supported source files to scan recursively.")
+    ap.add_argument("--pdf-dir", type=Path, help="Backward-compatible PDF-only root directory to scan recursively.")
     ap.add_argument("--output", type=Path, required=True, help="Output manifest CSV path.")
     ap.add_argument(
         "--language-from-folder",
         action="store_true",
-        help="Use the PDF's parent folder name (lowercased) as the language column.",
+        help="Use the source file's parent folder name (lowercased) as the language column.",
     )
     ap.add_argument(
         "--detect-content",
@@ -213,16 +267,26 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    if not args.pdf_dir.is_dir():
-        print(f"--pdf-dir not a directory: {args.pdf_dir}", file=sys.stderr)
+    if args.source_dir and args.pdf_dir:
+        print("Use either --source-dir or --pdf-dir, not both.", file=sys.stderr)
+        return 2
+    source_dir = args.source_dir or args.pdf_dir
+    pdf_only = args.source_dir is None
+    if source_dir is None:
+        print("Either --source-dir or --pdf-dir is required.", file=sys.stderr)
+        return 2
+    if not source_dir.is_dir():
+        flag = "--pdf-dir" if pdf_only else "--source-dir"
+        print(f"{flag} not a directory: {source_dir}", file=sys.stderr)
         return 2
     if not HAS_FITZ:
-        print("WARN: PyMuPDF not installed; total_pages will be blank. `pip install PyMuPDF`.", file=sys.stderr)
+        print("WARN: PyMuPDF not installed; PDF total_pages will be blank. `pip install PyMuPDF`.", file=sys.stderr)
 
     rows = build_rows(
-        pdf_dir=args.pdf_dir.resolve(),
+        source_dir=source_dir.resolve(),
         language_from_folder=args.language_from_folder,
         detect_content=args.detect_content,
+        pdf_only=pdf_only,
     )
     write_manifest(rows, args.output, include_language=args.language_from_folder)
     print(f"\nManifest: {args.output}")
@@ -231,7 +295,7 @@ def main(argv: list[str] | None = None) -> int:
     # -----------------------------------------------------------------------
     # Customization points (edit below for corpus-specific extraction):
     #
-    # - Series / collection identification: parse pdf_path parts against a
+    # - Series / collection identification: parse source_path parts against a
     #   dict of regex patterns (see /Thesis/pipeline/inventory.py for a
     #   sample case with three series).
     # - Chapter / episode numbers: add a CHAPTER_PATTERNS dict keyed by

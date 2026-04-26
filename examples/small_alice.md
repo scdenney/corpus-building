@@ -56,7 +56,7 @@ claude "I have 75 historical Korean newspaper scans (roughly 800 pages). The tex
 
 **Commands (pre-filled)**
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./newspapers --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./newspapers --output manifest.csv
 bash scripts/alice_deploy.sh \
     --host alice3 \
     --code-src ./pipeline --data-src ./newspapers \
@@ -78,7 +78,7 @@ python3 scripts/corpus_assembler.py --parse-tags --ocr-dir ocr_output --manifest
 Same as the API scenario. Runs on the student's laptop.
 
 ```bash
-python3 scripts/inventory_builder.py --pdf-dir ./newspapers --output manifest.csv
+python3 scripts/inventory_builder.py --source-dir ./newspapers --output manifest.csv
 ```
 
 ```
